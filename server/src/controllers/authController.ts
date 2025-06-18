@@ -12,7 +12,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   const { username, password } = req.body
   try {
     // Buscar si el usuario existe
-    const [rows] = await pool.execute('', [username])
+    const [rows] = await pool.execute('SELECT * FROM users WHERE dni = ?', [username])
 
     if (!Array.isArray(rows) || rows.length === 0) {
       return res.status(401).json({ success: false, message: 'Usuario o contraseña incorrectos' })
@@ -21,7 +21,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     const user = rows[0] as { id: number, username: string, password: string, role_id: number }
 
     // Verificar la contraseña
-    const isPasswordValid = await bcrypt.compare(password, user.password)
+    console.log(password.toString(), user.password)
+    const isPasswordValid = await bcrypt.compare(password.toString(), user.password)
     if (!isPasswordValid) {
       return res.status(401).json({ success: false, message: 'Usuario o contraseña incorrectos' })
     }
@@ -60,7 +61,7 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
 
   try {
     // Buscar el usuario en la base de datos
-    const [rows] = await pool.execute('', [userId])
+    const [rows] = await pool.execute('SELECT * FROM users WHERE id = ?', [userId])
 
     if (!Array.isArray(rows) || rows.length === 0) {
       return res.status(401).json({ success: false, message: 'Usuario no encontrado' })
