@@ -79,9 +79,9 @@ const CreateUserForm = () => {
           />
         </div>
         <div>
-          <label htmlFor="roleId">Rol:</label>
+          <label htmlFor="role_id">Rol:</label>
           <select
-            id="roleId"
+            id="role_id"
             value={formData.role_id}
             onChange={handleChange}
           >

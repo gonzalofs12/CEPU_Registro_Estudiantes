@@ -33,3 +33,16 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
     next(error)
   }
 }
+
+export const listUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const [rows] = await pool.execute('SELECT id, name, dni, role_id FROM users')
+
+    res.json({
+      success: true,
+      data: rows
+    })
+  } catch (error) {
+    next(error)
+  }
+} 

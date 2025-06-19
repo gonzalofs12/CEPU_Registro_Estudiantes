@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import ChangePasswordForm from '../components/ChangePasswordForm'
 import CreateUserForm from '../components/CreateUserForm'
+import ListUser from '../components/ListUser'
 
 const ProfilePage = () => {
 
@@ -20,6 +21,7 @@ const ProfilePage = () => {
         </button>
         {showChangePasswordForm ? <ChangePasswordForm /> : null}
         {roleId === 1 && <CreateUserForm />}
+        {roleId === 1 && <ListUser />}
       </div>
     </>
 

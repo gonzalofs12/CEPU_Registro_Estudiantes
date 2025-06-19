@@ -16,3 +16,8 @@ export const createUser = async (userData: any) => {
   })
   return response.data
 }
+
+export const listUser = async () => {
+  const response = await axios.get(`${API_URL}/user/list`)
+  return response.data
+}
