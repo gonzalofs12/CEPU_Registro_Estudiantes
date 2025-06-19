@@ -3,6 +3,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 import authRoutes from './routes/authRoutes'
 import testRoutes from './routes/testRoutes'
+import userRoutes from './routes/userRoutes'
 import { errorHandler } from './middlewares/errorMiddleware'
 
 const app = express()
@@ -16,6 +17,7 @@ app.get('/', (req: Request, res: Response) => {
 })
 app.use('/api/test', testRoutes)
 app.use('/api/auth', authRoutes)
+app.use('/api/user', userRoutes)
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404).json({

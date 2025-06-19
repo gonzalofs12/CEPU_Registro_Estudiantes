@@ -38,8 +38,10 @@ CREATE TABLE salons (
   capacity INT NOT NULL,
   sede_id INT NOT NULL,
   turn_id INT NOT NULL,
+  registration_process_id INT NOT NULL,
   FOREIGN KEY (sede_id) REFERENCES sedes(id) ON DELETE CASCADE,
-  FOREIGN KEY (turn_id) REFERENCES turns(id) ON DELETE CASCADE
+  FOREIGN KEY (turn_id) REFERENCES turns(id) ON DELETE CASCADE,
+  FOREIGN KEY (registration_process_id) REFERENCES registration_processes(id) ON DELETE CASCADE
 );
 -- Tabla de planes de pago
 CREATE TABLE payment_plans (

@@ -11,8 +11,11 @@ const LoginForm = () => {
 
     try {
       const { data } = await login(username, password)
-      console.log('Login exitoso:', data)
-      localStorage.setItem('token', data.data.token)
+      console.log('Login exitoso:', data.name)
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('username', data.username)
+      localStorage.setItem('role_id', data.role_id)
+      localStorage.setItem('name', data.name)
       window.location.href = '/dashboard'
     } catch (error) {
       setError('Credenciales incorrectas. Inténtalo de nuevo.')
@@ -45,6 +48,7 @@ const LoginForm = () => {
             required
           />
         </div>
+        <button type="submit">Iniciar Sesión</button>
       </form>
     </>
   )

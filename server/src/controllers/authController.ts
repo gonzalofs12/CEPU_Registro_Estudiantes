@@ -18,7 +18,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       return res.status(401).json({ success: false, message: 'Usuario o contraseña incorrectos' })
     }
 
-    const user = rows[0] as { id: number, username: string, password: string, role_id: number }
+    const user = rows[0] as { id: number, username: string, password: string, role_id: number, name: string }
 
     // Verificar la contraseña
     console.log(password.toString(), user.password)
@@ -32,26 +32,13 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       expiresIn: '12h',
     })
 
-    // Enviar la respuesta con el token
-    // res.json({
-    //   success: true,
-    //   message: 'Inicio de sesión exitoso',
-    //   token,
-    //   user: {
-    //     id: user.id,
-    //     username: user.username,
-    //     role_id: user.role_id,
-    //   },
-    // })
     res.json({
       success: true,
       message: 'Inicio de sesión exitoso',
-      data: { token },
+      data: { token, username: user.username, role_id: user.role_id, name: user.name },
     });
   } catch (error) {
     next(error)
-    // console.log('Error en el inicio de sesión:', error)
-    // res.status(500).json({ success: false, message: 'Error en el inicio de sesión' })
   }
 }
 
@@ -85,7 +72,5 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
 
   } catch (error) {
     next(error)
-    // console.log('Error al cambiar la contraseña:', error)
-    // res.status(500).json({ success: false, message: 'Error interno del servidor' })
   }
 }
