@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { listUser } from '../services/userApi'
+import { listUser, deleteUser } from '../services/userApi'
 
 interface User {
   id: number
@@ -11,6 +11,8 @@ interface User {
 const ListUser = () => {
 
   const [users, setUsers] = useState<User[]>([])
+  const [error, setError] = useState('')
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -26,10 +28,27 @@ const ListUser = () => {
     fetchUsers()
   }, [])
 
+  const handleDelete = async (user_id: number) => {
+    try {
+      const isAdministrator = localStorage.getItem('role_id') === '1'
+      const token = localStorage.getItem('token')
+      if (!token) {
+        setError('No se encontró el token de autenticación.')
+        return
+      }
+      await deleteUser(user_id, isAdministrator)
+      setError('')
+    } catch (error) {
+      setError('Error al cambiar la contraseña. Por favor, inténtalo de nuevo.')
+      console.error('Error al cambiar la contraseña:', error)
+    }
+  }
+
   return (
     <>
       <div>
         <h3>ListUser</h3>
+        {error && <p className="error">{error}</p>}
         <table>
           <thead>
             <tr>
@@ -37,6 +56,7 @@ const ListUser = () => {
               <th>Nombre</th>
               <th>DNI</th>
               <th>Rol</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody id="user-list">
@@ -47,6 +67,10 @@ const ListUser = () => {
                   <td>{user.name}</td>
                   <td>{user.dni}</td>
                   <td>{user.role_id === 1 ? 'Administrador' : 'Coordinador'}</td>
+                  <td>
+                    <button onClick={() => console.log(`Edit user with ID: ${user.id}`)}>Editar</button>
+                    <button onClick={() => handleDelete(user.id)}>Eliminar</button>
+                  </td>
                 </tr>
               ))}
           </tbody>

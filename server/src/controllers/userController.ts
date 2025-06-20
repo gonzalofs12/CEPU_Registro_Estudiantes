@@ -4,7 +4,6 @@ import pool from '../config/db'
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log(req.body)
     const userRole = req.body.is_administrator
 
     if (!userRole) {
@@ -45,4 +44,25 @@ export const listUser = async (req: Request, res: Response, next: NextFunction) 
   } catch (error) {
     next(error)
   }
-} 
+}
+
+export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userRole = req.body.is_administrator
+    if (!userRole) {
+      return res.status(403).json({
+        success: false,
+        message: 'Acceso denegado. Solo los administradores pueden eliminar usuarios.'
+      })
+    }
+    const userId = req.params.id
+
+    await pool.execute('DELETE FROM users WHERE id = ?', [userId])
+    res.json({
+      success: true,
+      message: 'Usuario eliminado exitosamente.'
+    })
+  } catch (error) {
+    next(error)
+  }
+}

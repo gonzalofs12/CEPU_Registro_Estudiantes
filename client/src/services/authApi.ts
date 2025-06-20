@@ -7,10 +7,10 @@ export const login = async (username: string, password: string) => {
   return response.data
 }
 
-export const changePassword = async (token: string, currentPassword: string, newPassword: string) => {
+export const changePassword = async (token: string, currentPassword: string, newPassword: string, username: string) => {
   const response = await axios.post(
     `${API_URL}/auth/change-password`,
-    { currentPassword, newPassword },
+    { currentPassword, newPassword, username },
     {
       headers: {
         Authorization: `Bearer ${token}`
