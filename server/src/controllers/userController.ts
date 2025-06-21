@@ -5,6 +5,7 @@ import pool from '../config/db'
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
    try {
       const userRole = req.body.is_administrator
+      console.log(req.body)
 
       if (!userRole) {
          return res.status(403).json({
@@ -13,11 +14,11 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
          })
       }
 
-      const { name, dni, password, role_id } = req.body
+      const { name, dni, password, role_id } = req.body.userData
 
       const hashedPassword = await bcrypt.hash(password, 10)
 
-      await pool.execute(
+      const response = await pool.execute(
          'INSERT INTO users (name, dni, password, role_id) VALUES (?, ?, ?, ?)',
          [name, Number(dni), hashedPassword, role_id]
       )
@@ -25,7 +26,10 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
       res.json
          ({
             success: true,
-            message: 'Usuario creado exitosamente.'
+            message: 'Usuario creado exitosamente.',
+            data: {
+               id: (response as any)[0].insertId
+            }
          })
 
    } catch (error) {

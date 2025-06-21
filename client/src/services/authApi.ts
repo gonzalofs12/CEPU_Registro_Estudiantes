@@ -3,15 +3,15 @@ import { useAuthStore } from "../store/useAuthStore"
 
 const API_URL = import.meta.env.VITE_API_URL
 
-export const login = async (username: string, password: string) => {
-  const response = await axios.post(`${API_URL}/auth/login`, { username, password })
+export const login = async (dni: string, password: string) => {
+  const response = await axios.post(`${API_URL}/auth/login`, { dni, password })
   return response.data
 }
 
-export const changePassword = async (token: string, currentPassword: string, newPassword: string, username: string) => {
+export const changePassword = async (token: string, currentPassword: string, newPassword: string, dni: string) => {
   const response = await axios.post(
     `${API_URL}/auth/change-password`,
-    { currentPassword, newPassword, username },
+    { currentPassword, newPassword, dni },
     {
       headers: {
         Authorization: `Bearer ${token}`

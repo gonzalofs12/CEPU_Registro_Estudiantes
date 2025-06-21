@@ -1,42 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import { listUser, deleteUser } from '../services/userApi'
-
-interface User {
-   id: number
-   name: string
-   dni: number
-   role_id: number
-}
+import { useUserStore } from '../store/useUserStore'
+import { useUserData } from '../hooks/useUserData'
+import { useGetToken } from '../hooks/useGetToken'
 
 const ListUser = () => {
-
-   const [users, setUsers] = useState<User[]>([])
+   const { users, refreshUser, removeUser } = useUserStore()
+   const { user } = useUserData()
+   const { token } = useGetToken()
    const [error, setError] = useState('')
 
 
    useEffect(() => {
-      const fetchUsers = async () => {
-         try {
-            const response = await listUser()
-            console.log('Users fetched successfully:', response)
-            setUsers(response.data)
-         } catch (error) {
-            console.error('Error fetching users:', error)
-         }
-      }
-
-      fetchUsers()
+      refreshUser()
    }, [])
 
-   const handleDelete = async (user_id: number) => {
+   const handleDelete = async (user_id: number, token: string | null) => {
       try {
-         const isAdministrator = localStorage.getItem('role_id') === '1'
-         const token = localStorage.getItem('token')
+         const isAdministrator = user?.role_id === 1
          if (!token) {
             setError('No se encontró el token de autenticación.')
             return
          }
-         await deleteUser(user_id, isAdministrator)
+         await removeUser(user_id, isAdministrator, token)
          setError('')
       } catch (error) {
          setError('Error al cambiar la contraseña. Por favor, inténtalo de nuevo.')
@@ -69,7 +54,7 @@ const ListUser = () => {
                            <td>{user.role_id === 1 ? 'Administrador' : 'Coordinador'}</td>
                            <td>
                               <button onClick={() => console.log(`Edit user with ID: ${user.id}`)}>Editar</button>
-                              <button onClick={() => handleDelete(user.id)}>Eliminar</button>
+                              <button onClick={() => handleDelete(user.id, token)}>Eliminar</button>
                            </td>
                         </tr>
                      ))}

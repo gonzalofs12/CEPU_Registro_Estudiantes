@@ -3,13 +3,12 @@ import axios from "axios"
 
 const API_URL = import.meta.env.VITE_API_URL
 
-export const createUser = async (userData: any) => {
-   const token = localStorage.getItem("token")
+export const createUser = async (userData: any, is_administrator: boolean, token: string) => {
    if (!token) {
       throw new Error("Token no encontrado")
    }
 
-   const response = await axios.post(`${API_URL}/user/create`, userData, {
+   const response = await axios.post(`${API_URL}/user/create`, { userData, is_administrator }, {
       headers: {
          Authorization: `Bearer ${token}`
       }
@@ -22,8 +21,7 @@ export const listUser = async () => {
    return response.data
 }
 
-export const deleteUser = async (userId: number, is_administrator: boolean) => {
-   const token = localStorage.getItem("token")
+export const deleteUser = async (userId: number, is_administrator: boolean, token: string) => {
    if (!token) {
       throw new Error("Token no encontrado")
    }

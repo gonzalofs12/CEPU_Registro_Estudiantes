@@ -9,10 +9,10 @@ dotenv.config()
 const SECRET_KEY = process.env.SECRET_KEY
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
-  const { username, password } = req.body
+  const { dni, password } = req.body
   try {
     // Buscar si el usuario existe
-    const [rows] = await pool.execute('SELECT * FROM users WHERE dni = ?', [username])
+    const [rows] = await pool.execute('SELECT * FROM users WHERE dni = ?', [dni])
 
     if (!Array.isArray(rows) || rows.length === 0) {
       return res.status(401).json({ success: false, message: 'Usuario o contraseña incorrectos' })
@@ -30,7 +30,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     console.log(user.dni)
 
     // Crear el token JWT
-    const token = jwt.sign({ id: user.id, username: user.dni, role_id: user.role_id }, SECRET_KEY as string, {
+    const token = jwt.sign({ id: user.id, dni: user.dni, role_id: user.role_id }, SECRET_KEY as string, {
       expiresIn: '12h',
     })
 
@@ -39,7 +39,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       message: 'Inicio de sesión exitoso',
       data: {
         token,
-        user: { id: user.id, username: user.dni, role_id: user.role_id, name: user.name }
+        user: { id: user.id, dni: user.dni, role_id: user.role_id, name: user.name }
       },
     });
   } catch (error) {
@@ -48,12 +48,12 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 }
 
 export const changePassword = async (req: Request, res: Response, next: NextFunction) => {
-  const { username } = req.body
+  const { dni } = req.body
   const { currentPassword, newPassword } = req.body
 
   try {
     // Buscar el usuario en la base de datos
-    const [rows] = await pool.execute('SELECT * FROM users WHERE dni = ?', [username])
+    const [rows] = await pool.execute('SELECT * FROM users WHERE dni = ?', [dni])
 
     if (!Array.isArray(rows) || rows.length === 0) {
       return res.status(401).json({ success: false, message: 'Usuario no encontrado' })
@@ -88,7 +88,7 @@ export const getUserFromToken = async (req: Request, res: Response, next: NextFu
   }
 
   try {
-    const decoded = jwt.verify(token, SECRET_KEY as string) as { id: number, username: string, role_id: number }
+    const decoded = jwt.verify(token, SECRET_KEY as string) as { id: number, dni: string, role_id: number }
 
     // Buscar el usuario en la base de datos
     const [rows] = await pool.execute('SELECT * FROM users WHERE id = ?', [decoded.id])
@@ -99,7 +99,7 @@ export const getUserFromToken = async (req: Request, res: Response, next: NextFu
 
     const user = rows[0] as { id: number, dni: string, role_id: number, name: string }
 
-    res.json({ success: true, user: { id: user.id, username: user.dni, role_id: user.role_id, name: user.name } })
+    res.json({ success: true, user: { id: user.id, dni: user.dni, role_id: user.role_id, name: user.name } })
   } catch (error) {
     next(error)
   }

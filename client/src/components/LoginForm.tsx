@@ -6,7 +6,7 @@ import { login } from '../services/authApi'
 
 const LoginForm = () => {
   const navigate = useNavigate()
-  const [username, setUsername] = useState('')
+  const [dni, setdni] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
@@ -14,7 +14,7 @@ const LoginForm = () => {
     e.preventDefault()
 
     try {
-      const { data } = await login(username, password)
+      const { data } = await login(dni, password)
       useAuthStore.getState().setToken(data.token)
       useUserStore.getState().setUser(data.user)
       navigate('/dashboard')
@@ -30,12 +30,12 @@ const LoginForm = () => {
         <h2>Iniciar Sesión</h2>
         {error && <p className="error">{error}</p>}
         <div>
-          <label htmlFor="username">Nombre del usuario:</label>
+          <label htmlFor="dni">Nombre del usuario:</label>
           <input
             type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            id="dni"
+            value={dni}
+            onChange={(e) => setdni(e.target.value)}
             required
           />
         </div>

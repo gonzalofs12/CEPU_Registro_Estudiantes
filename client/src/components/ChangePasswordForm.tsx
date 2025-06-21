@@ -11,12 +11,12 @@ const ChangePasswordForm = () => {
     e.preventDefault()
     try {
       const token = localStorage.getItem('token')
-      const username = localStorage.getItem('username') || ''
+      const dni = localStorage.getItem('dni') || ''
       if (!token) {
         setError('No se encontró el token de autenticación.')
         return
       }
-      const response = await changePassword(token, currentPassword, newPassword, username)
+      const response = await changePassword(token, currentPassword, newPassword, dni)
       setSuccess(true)
       setError('')
       setCurrentPassword('')
