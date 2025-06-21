@@ -11,16 +11,18 @@ import ProcessesPage from './pages/ProcessesPage'
 import InscriptionsPage from './pages/InscriptionsPage'
 import ProfilePage from './pages/ProfilePage'
 
+import { useFetchUserOnLoad } from './hooks/useFetchUserOnLoad'
+
 import './App.css'
 
-const isAuthenticated = () => !!localStorage.getItem('token')
+const isAuthenticated = () => !!localStorage.getItem('auth-storage') && !!JSON.parse(localStorage.getItem('auth-storage') || '{}').state.token
 
 const ProtectedRoute = ({ children }: { children: React.JSX.Element }) => {
   return isAuthenticated() ? children : <Navigate to="/login" replace />
 }
 
 function App() {
-
+  useFetchUserOnLoad() // Fetch user data on component load
   return (
     <>
       <Router>

@@ -13,8 +13,8 @@ interface ProcessStore {
    error: string
    loading: boolean
    refreshProcesses: () => Promise<void>
-   addProcess: (processData: Omit<Process, 'id'>) => Promise<void>
-   removeProcess: (processId: number) => Promise<void>
+   addProcess: (processData: Omit<Process, 'id'>, token: string) => Promise<void>
+   removeProcess: (processId: number, token: string) => Promise<void>
 }
 
 export const useProcessStore = create<ProcessStore>((set) => ({
@@ -33,10 +33,10 @@ export const useProcessStore = create<ProcessStore>((set) => ({
       }
    },
 
-   addProcess: async (processData) => {
+   addProcess: async (processData, token) => {
       set({ loading: true, error: '' })
       try {
-         const response = await createProcesses(processData)
+         const response = await createProcesses(processData, token)
          set((state) => ({
             processes: [...state.processes, { ...processData, id: response.data.id }],
             loading: false
@@ -47,10 +47,10 @@ export const useProcessStore = create<ProcessStore>((set) => ({
       }
    },
 
-   removeProcess: async (processId) => {
+   removeProcess: async (processId, token) => {
       set({ loading: true, error: '' })
       try {
-         await deleteProcesses(processId, true) // Assuming the user is an administrator
+         await deleteProcesses(processId, true, token) // Assuming the user is an administrator
          set((state) => ({
             processes: state.processes.filter((process) => process.id !== processId),
             loading: false

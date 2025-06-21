@@ -1,4 +1,5 @@
 import axios from "axios"
+import { useAuthStore } from "../store/useAuthStore"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -18,4 +19,18 @@ export const changePassword = async (token: string, currentPassword: string, new
     }
   )
   return response.data
+}
+
+export const getUserFromToken = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${useAuthStore.getState().token}`
+      }
+    })
+    return response.data.user
+  } catch (error) {
+    console.error('Error al obtener datos del usuario:', error)
+    throw error
+  }
 }

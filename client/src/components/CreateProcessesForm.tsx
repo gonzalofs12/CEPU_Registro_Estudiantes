@@ -1,19 +1,31 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useProcessStore } from '../store/useProcessStore'
+import { useUserData } from '../hooks/useUserData'
+import { useGetToken } from '../hooks/useGetToken'
 
 const CreateProcessesForm = () => {
 
-   const isAdministrator = localStorage.getItem('role_id') === '1'
+   const { user } = useUserData()
+   const { token } = useGetToken()
+
+   const isAdministrator = user?.role_id === 1
 
    const { addProcess } = useProcessStore()
 
    const [formData, setFormData] = useState({
       name: '',
       code: '',
-      is_administrator: isAdministrator, // Verificar si el usuario es administrador
+      is_administrator: false, // Verificar si el usuario es administrador
    })
-   const [error, setError] = useState('')
 
+   useEffect(() => {
+      setFormData((prev) => ({
+         ...prev,
+         is_administrator: isAdministrator,
+      }))
+   }, [user])
+
+   const [error, setError] = useState('')
    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { id, value } = e.target
       setFormData({ ...formData, [id]: value })
@@ -23,7 +35,8 @@ const CreateProcessesForm = () => {
       e.preventDefault()
 
       try {
-         await addProcess(formData)
+         console.log(formData)
+         await addProcess(formData, token || '')
          setFormData({ ...formData, name: '', code: '' })
          setError('')
       } catch (error) {

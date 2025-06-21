@@ -37,7 +37,10 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     res.json({
       success: true,
       message: 'Inicio de sesión exitoso',
-      data: { token, username: user.dni, role_id: user.role_id, name: user.name },
+      data: {
+        token,
+        user: { id: user.id, username: user.dni, role_id: user.role_id, name: user.name }
+      },
     });
   } catch (error) {
     next(error)
@@ -72,6 +75,31 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
 
     res.json({ success: true, message: 'Contraseña actualizada exitosamente' })
 
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getUserFromToken = async (req: Request, res: Response, next: NextFunction) => {
+  const token = req.headers['authorization']?.split(' ')[1]
+
+  if (!token) {
+    return res.status(401).json({ success: false, message: 'Token no proporcionado' })
+  }
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY as string) as { id: number, username: string, role_id: number }
+
+    // Buscar el usuario en la base de datos
+    const [rows] = await pool.execute('SELECT * FROM users WHERE id = ?', [decoded.id])
+
+    if (!Array.isArray(rows) || rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Usuario no encontrado' })
+    }
+
+    const user = rows[0] as { id: number, dni: string, role_id: number, name: string }
+
+    res.json({ success: true, user: { id: user.id, username: user.dni, role_id: user.role_id, name: user.name } })
   } catch (error) {
     next(error)
   }

@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react'
 import { useProcessStore } from '../store/useProcessStore'
+import { useUserData } from '../hooks/useUserData'
+import { useAuthStore } from '../store/useAuthStore'
+
 
 const ListProcesses = () => {
 
    const { processes, loading, error, refreshProcesses, removeProcess } = useProcessStore()
+   const { user } = useUserData()
 
    useEffect(() => {
       refreshProcesses()
@@ -15,12 +19,12 @@ const ListProcesses = () => {
 
    const handleDelete = async (processes_id: number) => {
       try {
-         const isAdministrator = localStorage.getItem('role_id') === '1'
-         const token = localStorage.getItem('token')
+         const isAdministrator = user?.role_id === 1
+         const token = useAuthStore.getState().token
          if (!token || !isAdministrator) {
             return
          }
-         await removeProcess(processes_id)
+         await removeProcess(processes_id, token)
       } catch (error) {
          console.error('Error al eliminar procesow:', error)
       }

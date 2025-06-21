@@ -8,8 +8,8 @@ interface Process {
    is_administrator: boolean
 }
 
-export const createProcesses = async (processesData: Process) => {
-   const token = localStorage.getItem("token")
+export const createProcesses = async (processesData: Process, token: string) => {
+   console.log(processesData)
    if (!token) {
       throw new Error("Token no encontrado")
    }
@@ -27,8 +27,7 @@ export const listProcesses = async () => {
    return response.data
 }
 
-export const deleteProcesses = async (processesId: number, is_administrator: boolean) => {
-   const token = localStorage.getItem("token")
+export const deleteProcesses = async (processesId: number, is_administrator: boolean, token: string) => {
    if (!token) {
       throw new Error("Token no encontrado")
    }

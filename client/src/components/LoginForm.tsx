@@ -1,7 +1,11 @@
 import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useAuthStore } from "../store/useAuthStore"
+import { useUserStore } from "../store/useUserStore"
 import { login } from '../services/authApi'
 
 const LoginForm = () => {
+  const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -11,12 +15,9 @@ const LoginForm = () => {
 
     try {
       const { data } = await login(username, password)
-      console.log('Login exitoso:', data.name)
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('username', data.username)
-      localStorage.setItem('role_id', data.role_id)
-      localStorage.setItem('name', data.name)
-      window.location.href = '/dashboard'
+      useAuthStore.getState().setToken(data.token)
+      useUserStore.getState().setUser(data.user)
+      navigate('/dashboard')
     } catch (error) {
       setError('Credenciales incorrectas. Inténtalo de nuevo.')
       console.error('Error de inicio de sesión:', error)

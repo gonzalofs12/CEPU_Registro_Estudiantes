@@ -2,11 +2,15 @@ import React, { useState } from 'react'
 import ChangePasswordForm from '../components/ChangePasswordForm'
 import CreateUserForm from '../components/CreateUserForm'
 import ListUser from '../components/ListUser'
+import { useUserData } from '../hooks/useUserData'
+
 
 const ProfilePage = () => {
 
-  const name = localStorage.getItem('name') || 'Usuario'
-  const roleId = Number(localStorage.getItem('role_id')) || 0
+  const { user } = useUserData()
+
+  const name = user?.name || 'Usuario'
+  const roleId = user?.id || 0
 
   const [showChangePasswordForm, setShowChangePasswordForm] = useState(false)
 
