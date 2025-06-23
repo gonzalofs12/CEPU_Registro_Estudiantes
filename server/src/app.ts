@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes'
 import testRoutes from './routes/testRoutes'
 import userRoutes from './routes/userRoutes'
 import processesRoutes from './routes/processesRoutes'
+import turnsRoutes from './routes/turnsRoutes'
 import { errorHandler } from './middlewares/errorMiddleware'
 
 const app = express()
@@ -20,6 +21,7 @@ app.use('/api/test', testRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/processes', processesRoutes)
+app.use('/api/turns', turnsRoutes)
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404).json({

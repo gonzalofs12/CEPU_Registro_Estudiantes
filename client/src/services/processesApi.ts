@@ -9,7 +9,6 @@ interface Process {
 }
 
 export const createProcesses = async (processesData: Process, token: string) => {
-   console.log(processesData)
    if (!token) {
       throw new Error("Token no encontrado")
    }
