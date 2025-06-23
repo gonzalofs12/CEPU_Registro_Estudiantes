@@ -1,11 +1,9 @@
 import { Response, Request, NextFunction } from "express"
-import bcrypt from "bcrypt"
 import pool from '../config/db'
 
 export const createProcesses = async (req: Request, res: Response, next: NextFunction) => {
    try {
       const userRole = req.body.is_administrator
-      console.log(req.body)
 
       if (!userRole) {
          return res.status(403).json({
