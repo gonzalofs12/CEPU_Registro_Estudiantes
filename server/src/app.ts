@@ -9,6 +9,7 @@ import turnsRoutes from './routes/turnsRoutes'
 import sedesRoutes from './routes/sedesRoutes'
 import paymentPlansRoutes from './routes/paymentPlansRoutes'
 import salonsRoutes from './routes/salonsRoutes'
+import inscriptionStudentRoutes from './routes/inscriptionStudentRoutes'
 import { errorHandler } from './middlewares/errorMiddleware'
 
 const app = express()
@@ -28,6 +29,7 @@ app.use('/api/turns', turnsRoutes)
 app.use('/api/sedes', sedesRoutes)
 app.use('/api/payment-plans', paymentPlansRoutes)
 app.use('/api/salons', salonsRoutes)
+app.use('/api/students', inscriptionStudentRoutes)
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404).json({

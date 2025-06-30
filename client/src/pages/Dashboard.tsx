@@ -2,6 +2,7 @@ import React from 'react'
 import { useAuthStore } from '../store/useAuthStore'
 import { useUserStore } from '../store/useUserStore'
 import { useUserData } from '../hooks/useUserData'
+import ListStudent from '../components/ListStudent'
 
 const DashboardPage = () => {
   const { user } = useUserData()
@@ -21,6 +22,7 @@ const DashboardPage = () => {
         <p>Bienvenido, {name}</p>
         {roleId === 1 ? <p>Administrador</p> : <p>Coordinador</p>}
         <button onClick={handleLogout}>Cerrar Sesión</button>
+        <ListStudent />
       </div>
     </>
   )
