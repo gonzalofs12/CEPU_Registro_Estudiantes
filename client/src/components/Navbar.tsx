@@ -4,7 +4,7 @@ const Navbar = () => {
   return (
     <>
       <nav style={{ backgroundColor: '#333', color: '#fff', padding: '10px' }}>
-        <h2>Registrar ALumnos APP</h2>
+        <h2>Registrar Alumnos APP</h2>
       </nav>
     </>
   )

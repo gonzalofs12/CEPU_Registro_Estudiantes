@@ -10,6 +10,7 @@ import SalonsPage from './pages/SalonsPage'
 import ProcessesPage from './pages/ProcessesPage'
 import InscriptionsPage from './pages/InscriptionsPage'
 import ProfilePage from './pages/ProfilePage'
+import PaymentPlansPage from './pages/PaymentPlansPage'
 
 import { useFetchUserOnLoad } from './hooks/useFetchUserOnLoad'
 
@@ -111,6 +112,20 @@ function App() {
                   <div>
                     <Navbar />
                     <InscriptionsPage />
+                  </div>
+                </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/payment-plans'
+            element={
+              <ProtectedRoute>
+                <div >
+                  <Slidebar />
+                  <div>
+                    <Navbar />
+                    <PaymentPlansPage />
                   </div>
                 </div>
               </ProtectedRoute>

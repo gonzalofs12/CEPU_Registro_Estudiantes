@@ -23,6 +23,9 @@ const Slidebar = () => {
             <Link to='/processes'>Procesos de Inscripción</Link>
           </li>
           <li>
+            <Link to='/payment-plans'>Planes de Pago</Link>
+          </li>
+          <li>
             <Link to='/inscriptions'>Inscripciones</Link>
           </li>
           <li>

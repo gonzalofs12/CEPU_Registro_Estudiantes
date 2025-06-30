@@ -24,7 +24,8 @@ CREATE TABLE registration_processes (
 -- Tabla de sedes
 CREATE TABLE sedes (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL UNIQUE
+  name VARCHAR(100) NOT NULL UNIQUE,
+  code VARCHAR(50) NOT NULL UNIQUE
 );
 -- Tabla de turnos
 CREATE TABLE turns (
