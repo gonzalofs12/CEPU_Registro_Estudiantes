@@ -2,15 +2,24 @@ import { useEffect, useState } from "react";
 import { useGetToken } from "../hooks/useGetToken";
 import { useUserData } from "../hooks/useUserData";
 import { useSalonStore } from "../store/useSalonStore";
+import { useSedeStore } from "../store/useSedeStore";
+import { useTurnStore } from "../store/useTurnStore";
+import { useProcessStore } from "../store/useProcessStore";
 
 const ListSalons = () => {
    const { salons, refreshSalons, removeSalon } = useSalonStore()
    const { user } = useUserData()
    const { token } = useGetToken()
    const [error, setError] = useState("")
+   const { sedes, refreshSedes } = useSedeStore()
+   const { turns, refreshTurns } = useTurnStore()
+   const { processes, refreshProcesses } = useProcessStore()
 
    useEffect(() => {
       refreshSalons()
+      refreshSedes()
+      refreshTurns()
+      refreshProcesses()
    }, [])
 
    const handleDelete = async (salon_id: number, token: string | null) => {
@@ -51,9 +60,9 @@ const ListSalons = () => {
                         <td>{salon.id}</td>
                         <td>{salon.name}</td>
                         <td>{salon.capacity}</td>
-                        <td>{salon.sede_id}</td>
-                        <td>{salon.turn_id}</td>
-                        <td>{salon.registration_process_id}</td>
+                        <td>{sedes.find(sede => sede.id === salon.sede_id)?.name || salon.sede_id}</td>
+                        <td>{turns.find(turn => turn.id === salon.turn_id)?.name || salon.turn_id}</td>
+                        <td>{processes.find(process => process.id === salon.registration_process_id)?.name || salon.registration_process_id}</td>
                         <td>
                            <button onClick={() => console.log(`Edit salon with ID: ${salon.id}`)}>Editar</button>
                            <button onClick={() => handleDelete(salon.id, token)}>Eliminar</button>

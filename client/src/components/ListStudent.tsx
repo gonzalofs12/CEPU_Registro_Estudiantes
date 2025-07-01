@@ -2,15 +2,30 @@ import { useEffect, useState } from "react"
 import { useGetToken } from "../hooks/useGetToken"
 import { useUserData } from "../hooks/useUserData"
 import { useStudentStore } from "../store/useStudentStore"
+import { useSedeStore } from "../store/useSedeStore"
+import { useTurnStore } from "../store/useTurnStore"
+import { useSalonStore } from "../store/useSalonStore"
+import { usePaymentPlanStore } from "../store/usePaymentPlanStore"
+import { useProcessStore } from "../store/useProcessStore"
 
 const ListStudent = () => {
    const { students, refreshStudents, removeStudent } = useStudentStore()
    const { user } = useUserData()
    const { token } = useGetToken()
    const [error, setError] = useState("")
+   const { sedes, refreshSedes } = useSedeStore()
+   const { turns, refreshTurns } = useTurnStore()
+   const { salons, refreshSalons } = useSalonStore()
+   const { paymentPlans, refreshPaymentPlans } = usePaymentPlanStore()
+   const { processes, refreshProcesses } = useProcessStore()
 
    useEffect(() => {
       refreshStudents()
+      refreshSedes()
+      refreshTurns()
+      refreshSalons()
+      refreshPaymentPlans()
+      refreshProcesses()
    }, [])
 
    const handleDelete = async (studentId: number, token: string | null) => {
@@ -42,7 +57,7 @@ const ListStudent = () => {
                      <th>DNI</th>
                      <th>Fecha de Inscripcion</th>
                      <th>Plan de Pago</th>
-                     <th>Nececita Pago</th>
+                     <th>Necesita Pago</th>
                      <th>Proceso de Registro</th>
                      <th>Sede</th>
                      <th>Turno</th>
@@ -58,12 +73,12 @@ const ListStudent = () => {
                         <td>{student.last_name}</td>
                         <td>{student.dni}</td>
                         <td>{student.date_inscription.split('T')[0]}</td>
-                        <td>{student.payment_plan_id}</td>
-                        <td>{student.need_to_pay}</td>
-                        <td>{student.registration_process_id}</td>
-                        <td>{student.sede_id}</td>
-                        <td>{student.turn_id}</td>
-                        <td>{student.salon_id}</td>
+                        <td>{paymentPlans.find(plan => plan.id === student.payment_plan_id)?.name || student.payment_plan_id}</td>
+                        <td>{student.need_to_pay ? 'Sí' : 'No'}</td>
+                        <td>{processes.find(process => process.id === student.registration_process_id)?.name || student.registration_process_id}</td>
+                        <td>{sedes.find(sede => sede.id === student.sede_id)?.name || student.sede_id}</td>
+                        <td>{turns.find(turn => turn.id === student.turn_id)?.name || student.turn_id}</td>
+                        <td>{salons.find(salon => salon.id === student.salon_id)?.name || student.salon_id}</td>
                         <td>
                            <button onClick={() => handleDelete(student.id, token)}>Eliminar</button>
                         </td>
