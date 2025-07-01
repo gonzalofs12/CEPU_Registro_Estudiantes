@@ -19,137 +19,137 @@ import './App.css'
 const isAuthenticated = () => !!localStorage.getItem('auth-storage') && !!JSON.parse(localStorage.getItem('auth-storage') || '{}').state.token
 
 const ProtectedRoute = ({ children }: { children: React.JSX.Element }) => {
-  return isAuthenticated() ? children : <Navigate to="/login" replace />
+   return isAuthenticated() ? children : <Navigate to="/login" replace />
 }
 
 function App() {
-  useFetchUserOnLoad() // Fetch user data on component load
-  return (
-    <>
-      <Router>
-        <Routes>
-          <Route
-            path='/login'
-            element={<LoginPage />}
-          />
+   useFetchUserOnLoad() // Fetch user data on component load
+   return (
+      <>
+         <Router>
+            <Routes>
+               <Route
+                  path='/login'
+                  element={<LoginPage />}
+               />
 
-          <Route
-            path='/'
-            element={
-              <ProtectedRoute>
-                <div >
-                  <Slidebar />
-                  <div>
-                    <Navbar />
-                    <DashboardPage />
-                  </div>
-                </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/turns'
-            element={
-              <ProtectedRoute>
-                <div >
-                  <Slidebar />
-                  <div>
-                    <Navbar />
-                    <TurnsPage />
-                  </div>
-                </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/sedes'
-            element={
-              <ProtectedRoute>
-                <div >
-                  <Slidebar />
-                  <div>
-                    <Navbar />
-                    <SedesPages />
-                  </div>
-                </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/salons'
-            element={
-              <ProtectedRoute>
-                <div >
-                  <Slidebar />
-                  <div>
-                    <Navbar />
-                    <SalonsPage />
-                  </div>
-                </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/processes'
-            element={
-              <ProtectedRoute>
-                <div >
-                  <Slidebar />
-                  <div>
-                    <Navbar />
-                    <ProcessesPage />
-                  </div>
-                </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/inscriptions'
-            element={
-              <ProtectedRoute>
-                <div >
-                  <Slidebar />
-                  <div>
-                    <Navbar />
-                    <InscriptionsPage />
-                  </div>
-                </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/payment-plans'
-            element={
-              <ProtectedRoute>
-                <div >
-                  <Slidebar />
-                  <div>
-                    <Navbar />
-                    <PaymentPlansPage />
-                  </div>
-                </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/profile'
-            element={
-              <ProtectedRoute>
-                <div >
-                  <Slidebar />
-                  <div>
-                    <Navbar />
-                    <ProfilePage />
-                  </div>
-                </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </Router>
-    </>
-  )
+               <Route
+                  path='/'
+                  element={
+                     <ProtectedRoute>
+                        <div >
+                           <Slidebar />
+                           <div>
+                              <Navbar />
+                              <DashboardPage />
+                           </div>
+                        </div>
+                     </ProtectedRoute>
+                  }
+               />
+               <Route
+                  path='/turns'
+                  element={
+                     <ProtectedRoute>
+                        <div >
+                           <Slidebar />
+                           <div>
+                              <Navbar />
+                              <TurnsPage />
+                           </div>
+                        </div>
+                     </ProtectedRoute>
+                  }
+               />
+               <Route
+                  path='/sedes'
+                  element={
+                     <ProtectedRoute>
+                        <div >
+                           <Slidebar />
+                           <div>
+                              <Navbar />
+                              <SedesPages />
+                           </div>
+                        </div>
+                     </ProtectedRoute>
+                  }
+               />
+               <Route
+                  path='/salons'
+                  element={
+                     <ProtectedRoute>
+                        <div >
+                           <Slidebar />
+                           <div>
+                              <Navbar />
+                              <SalonsPage />
+                           </div>
+                        </div>
+                     </ProtectedRoute>
+                  }
+               />
+               <Route
+                  path='/processes'
+                  element={
+                     <ProtectedRoute>
+                        <div >
+                           <Slidebar />
+                           <div>
+                              <Navbar />
+                              <ProcessesPage />
+                           </div>
+                        </div>
+                     </ProtectedRoute>
+                  }
+               />
+               <Route
+                  path='/inscriptions'
+                  element={
+                     <ProtectedRoute>
+                        <div >
+                           <Slidebar />
+                           <div>
+                              <Navbar />
+                              <InscriptionsPage />
+                           </div>
+                        </div>
+                     </ProtectedRoute>
+                  }
+               />
+               <Route
+                  path='/payment-plans'
+                  element={
+                     <ProtectedRoute>
+                        <div >
+                           <Slidebar />
+                           <div>
+                              <Navbar />
+                              <PaymentPlansPage />
+                           </div>
+                        </div>
+                     </ProtectedRoute>
+                  }
+               />
+               <Route
+                  path='/profile'
+                  element={
+                     <ProtectedRoute>
+                        <div >
+                           <Slidebar />
+                           <div>
+                              <Navbar />
+                              <ProfilePage />
+                           </div>
+                        </div>
+                     </ProtectedRoute>
+                  }
+               />
+               <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+         </Router>
+      </>
+   )
 }
 
 export default App

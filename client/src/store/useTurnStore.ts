@@ -42,7 +42,7 @@ export const useTurnStore = create<TurnState>((set) => ({
       try {
          const response = await createTurn(turnData, is_administrator, token)
          set((state) => ({
-            turns: [...state.turns, { ...turnData, id: response.data.id }],
+            turns: [...state.turns, { name: response.data.name, id: response.data.id }],
             loading: false
          }))
       } catch (error) {

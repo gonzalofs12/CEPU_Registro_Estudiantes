@@ -43,7 +43,7 @@ export const usePaymentPlanStore = create<PaymentPlanState>((set) => ({
       try {
          const response = await createPaymentPlan(paymentPlanData, is_administrator, token)
          set((state) => ({
-            paymentPlans: [...state.paymentPlans, { ...paymentPlanData, id: response.data.id }],
+            paymentPlans: [...state.paymentPlans, { name: response.data.name, price: response.data.price, id: response.data.id }],
             loading: false
          }))
       } catch (error) {

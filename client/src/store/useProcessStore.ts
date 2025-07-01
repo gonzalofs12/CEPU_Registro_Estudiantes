@@ -38,7 +38,7 @@ export const useProcessStore = create<ProcessStore>((set) => ({
       try {
          const response = await createProcesses(processData, token)
          set((state) => ({
-            processes: [...state.processes, { ...processData, id: response.data.id }],
+            processes: [...state.processes, { name: response.data.name, code: response.data.code, id: response.data.id, is_administrator: processData.is_administrator }],
             loading: false
          }))
       } catch (error) {

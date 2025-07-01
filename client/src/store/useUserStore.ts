@@ -43,7 +43,6 @@ export const useUserStore = create<UserState>((set) => ({
       set({ loading: true, error: '' })
       try {
          const response = await createUser(userData, is_administrator, token)
-         console.log(response)
          set((state) => ({
             users: [...state.users, { ...userData, id: response.data.id }],
             loading: false

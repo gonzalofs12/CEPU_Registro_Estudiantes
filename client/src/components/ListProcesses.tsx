@@ -26,7 +26,7 @@ const ListProcesses = () => {
          }
          await removeProcess(processes_id, token)
       } catch (error) {
-         console.error('Error al eliminar procesow:', error)
+         console.error('Error al eliminar proceso:', error)
       }
    }
 

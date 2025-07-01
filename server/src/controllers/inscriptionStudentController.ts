@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import pool from "../config/db";
 import { generateStudentPDF } from "../scripts/createPDF";
+import { transformObjectToUpperCase } from "../utils/textTransform";
 
 export const createStudent = async (req: Request, res: Response, next: NextFunction) => {
    try {
       const userRole = req.body.is_administrator
-      console.log(req.body)
-      const { name, last_name, dni, record_number, date_inscription, payment_plan_id, need_to_pay, registration_process_id, sede_id, turn_id } = req.body.studentData
+      const { name, last_name, dni, record_number, date_inscription, payment_plan_id, need_to_pay, registration_process_id, sede_id, turn_id } = transformObjectToUpperCase(req.body.studentData)
 
       const [salonRows] = await pool.execute(
          `
@@ -36,7 +36,6 @@ export const createStudent = async (req: Request, res: Response, next: NextFunct
       }
 
       const salon = salonRows[0] as { id: number; name: string; capacity: number }
-      console.log(name, last_name, dni, record_number, date_inscription, payment_plan_id, need_to_pay, registration_process_id, sede_id, salon.id, turn_id)
       // Obtener nombres de sede, salón y turno
       const [sedeRows] = await pool.execute('SELECT name FROM sedes WHERE id = ?', [sede_id]);
       const sedeData = (sedeRows as Array<{ name: string }>)[0]
@@ -89,7 +88,7 @@ export const deleteStudent = async (req: Request, res: Response, next: NextFunct
       const userRole = req.body.is_administrator
       const student_id = req.params.id
 
-      await pool.execute('DELETE FROM turns WHERE id = ?', [student_id])
+      await pool.execute('DELETE FROM students WHERE id = ?', [student_id])
 
       res.json({
          success: true,

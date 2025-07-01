@@ -21,7 +21,6 @@ export const createStudent = async (studentData: Omit<Student, 'id'>, is_adminis
    if (!token) {
       throw new Error("Token no encontrado")
    }
-   console.log(studentData)
    const response = await axios.post(`${API_URL}/students/create`, { studentData, is_administrator }, {
       headers: {
          Authorization: `Bearer ${token}`

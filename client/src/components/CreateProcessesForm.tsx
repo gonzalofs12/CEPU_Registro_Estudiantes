@@ -35,7 +35,6 @@ const CreateProcessesForm = () => {
       e.preventDefault()
 
       try {
-         console.log(formData)
          await addProcess(formData, token || '')
          setFormData({ ...formData, name: '', code: '' })
          setError('')

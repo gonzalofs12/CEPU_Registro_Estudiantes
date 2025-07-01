@@ -1,5 +1,6 @@
 import { Response, Request, NextFunction } from "express"
 import pool from "../config/db"
+import { transformObjectToUpperCase } from "../utils/textTransform"
 
 export const createSede = async (req: Request, res: Response, next: NextFunction) => {
    try {
@@ -11,7 +12,7 @@ export const createSede = async (req: Request, res: Response, next: NextFunction
          })
       }
 
-      const { name, code } = req.body.sedeData
+      const { name, code } = transformObjectToUpperCase(req.body.sedeData)
 
       const response = await pool.execute(
          "INSERT INTO sedes (name, code) VALUES (?, ?)",
@@ -75,7 +76,7 @@ export const updateSede = async (req: Request, res: Response, next: NextFunction
          })
       }
       const sede_id = req.params.id
-      const { name, code } = req.body
+      const { name, code } = transformObjectToUpperCase(req.body)
       const response = await pool.execute(
          "UPDATE sedes SET name = ?, code = ? WHERE id = ?",
          [name, code, sede_id]

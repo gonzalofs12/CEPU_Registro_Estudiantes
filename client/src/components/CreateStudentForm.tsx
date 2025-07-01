@@ -66,7 +66,6 @@ const CreateStudentForm = () => {
             record_number: record_number,
             date_inscription: date_inscription
          }
-         console.log(updatedFormData)
          const response = await addStudent(updatedFormData, isAdministrator, token);
 
          // Descargar el PDF

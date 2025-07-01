@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import pool from '../config/db'
+import { transformObjectToUpperCase } from "../utils/textTransform"
 
 export const createTurn = async (req: Request, res: Response, next: NextFunction) => {
    try {
@@ -12,7 +13,7 @@ export const createTurn = async (req: Request, res: Response, next: NextFunction
          })
       }
 
-      const { name } = req.body.turnData
+      const { name } = transformObjectToUpperCase(req.body.turnData)
 
       const response = await pool.execute(
          'INSERT INTO turns (name) VALUES (?)',
@@ -23,7 +24,8 @@ export const createTurn = async (req: Request, res: Response, next: NextFunction
          success: true,
          message: 'Turno creado exitosamente.',
          data: {
-            id: (response as any)[0].insertId
+            id: (response as any)[0].insertId,
+            name: name
          }
       })
 

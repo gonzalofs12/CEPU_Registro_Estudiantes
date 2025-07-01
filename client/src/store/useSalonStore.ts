@@ -46,7 +46,7 @@ export const useSalonStore = create<SalonState>((set) => ({
       try {
          const response = await createSalon(salonData, is_administrator, token)
          set((state) => ({
-            salons: [...state.salons, { ...salonData, id: response.data.id }],
+            salons: [...state.salons, { name: response.data.name, capacity: response.data.capacity, sede_id: response.data.sede_id, turn_id: response.data.turn_id, registration_process_id: response.data.registration_process_id, id: response.data.id }],
             loading: false
          }))
       } catch (error) {

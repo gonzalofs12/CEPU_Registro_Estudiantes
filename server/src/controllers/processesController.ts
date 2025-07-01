@@ -1,5 +1,6 @@
 import { Response, Request, NextFunction } from "express"
 import pool from '../config/db'
+import { transformObjectToUpperCase } from "../utils/textTransform"
 
 export const createProcesses = async (req: Request, res: Response, next: NextFunction) => {
    try {
@@ -12,23 +13,22 @@ export const createProcesses = async (req: Request, res: Response, next: NextFun
          })
       }
 
-      const { name, code } = req.body
+      const { name, code } = transformObjectToUpperCase(req.body)
 
       const response = await pool.execute(
          'INSERT INTO registration_processes (name, code) VALUES (?, ?)',
          [name, Number(code)]
       )
 
-      res.json
-         ({
-            success: true,
-            message: 'Usuario creado exitosamente.',
-            data: {
-               id: (response as any)[0].insertId,
-               name,
-               code: Number(code)
-            }
-         })
+      res.json({
+         success: true,
+         message: 'Proceso creado exitosamente.',
+         data: {
+            id: (response as any)[0].insertId,
+            name,
+            code: Number(code)
+         }
+      })
 
    } catch (error) {
       next(error)

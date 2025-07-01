@@ -5,6 +5,6 @@ const router = Router()
 
 router.post("/create", createStudent)
 router.get("/list", listStudents)
-router.post("/delete/:id", deleteStudent)
+router.delete("/delete/:id", deleteStudent)
 
 export default router

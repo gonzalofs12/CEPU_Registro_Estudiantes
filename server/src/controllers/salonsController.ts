@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import pool from '../config/db'
+import { transformObjectToUpperCase } from "../utils/textTransform"
 
 export const createSalon = async (req: Request, res: Response, next: NextFunction) => {
    try {
@@ -12,7 +13,7 @@ export const createSalon = async (req: Request, res: Response, next: NextFunctio
          })
       }
 
-      const { name, capacity, sede_id, turn_id, registration_process_id } = req.body.salonData
+      const { name, capacity, sede_id, turn_id, registration_process_id } = transformObjectToUpperCase(req.body.salonData)
 
       const response = await pool.execute(
          'INSERT INTO salons (name, capacity, sede_id, turn_id, registration_process_id) VALUES (?, ?, ?, ?, ?)',
@@ -23,7 +24,12 @@ export const createSalon = async (req: Request, res: Response, next: NextFunctio
          success: true,
          message: 'Salón creado exitosamente.',
          data: {
-            id: (response as any)[0].insertId
+            id: (response as any)[0].insertId,
+            name,
+            capacity,
+            sede_id,
+            turn_id,
+            registration_process_id
          }
       })
    } catch (error) {

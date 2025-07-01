@@ -42,7 +42,7 @@ export const useSedeStore = create<SedeState>((set) => ({
       try {
          const response = await createSede(sedeData, is_administrator, token)
          set((state) => ({
-            sedes: [...state.sedes, { ...sedeData, id: response.data.id }],
+            sedes: [...state.sedes, { name: response.data.name, code: response.data.code, id: response.data.id }],
             loading: false
          }))
       } catch (error) {

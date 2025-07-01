@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import pool from '../config/db'
+import { transformObjectToUpperCase } from "../utils/textTransform"
 
 export const createPaymentPlan = async (req: Request, res: Response, next: NextFunction) => {
    try {
@@ -11,7 +12,7 @@ export const createPaymentPlan = async (req: Request, res: Response, next: NextF
          })
       }
 
-      const { name, price } = req.body.paymentPlanData
+      const { name, price } = transformObjectToUpperCase(req.body.paymentPlanData)
 
       const response = await pool.execute(
          'INSERT INTO payment_plans (name, price) VALUES (?, ?)',
@@ -21,7 +22,9 @@ export const createPaymentPlan = async (req: Request, res: Response, next: NextF
          success: true,
          message: 'Plan de pago creado exitosamente.',
          data: {
-            id: (response as any)[0].insertId
+            id: (response as any)[0].insertId,
+            name,
+            price
          }
       })
    } catch (error) {
