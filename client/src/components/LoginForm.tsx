@@ -25,33 +25,40 @@ const LoginForm = () => {
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <h2>Iniciar Sesión</h2>
-        {error && <p className="error">{error}</p>}
-        <div>
-          <label htmlFor="dni">Nombre del usuario:</label>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
+        <h2 className="text-2xl font-bold text-center mb-6 text-sky-700">Iniciar Sesión</h2>
+        {error && <p className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">{error}</p>}
+        <div className="mb-4">
+          <label htmlFor="dni" className="block text-gray-700 text-sm font-bold mb-2">Nombre del usuario:</label>
           <input
             type="text"
             id="dni"
             value={dni}
             onChange={(e) => setdni(e.target.value)}
             required
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        <div>
-          <label htmlFor="password">Contraseña:</label>
+        <div className="mb-6">
+          <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
           <input
             type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        <button type="submit">Iniciar Sesión</button>
+        <button
+          type="submit"
+          className="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out cursor-pointer"
+        >
+          Iniciar Sesión
+        </button>
       </form>
-    </>
+    </div>
   )
 }
 

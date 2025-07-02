@@ -7,10 +7,11 @@ import { useTurnStore } from "../store/useTurnStore";
 import { useProcessStore } from "../store/useProcessStore";
 
 const ListSalons = () => {
-   const { salons, refreshSalons, removeSalon } = useSalonStore()
+   const { salons, refreshSalons, removeSalon, success, message, loading } = useSalonStore()
    const { user } = useUserData()
    const { token } = useGetToken()
-   const [error, setError] = useState("")
+   const [displayMessage, setDisplayMessage] = useState("")
+   const [isSuccess, setIsSuccess] = useState(false)
    const { sedes, refreshSedes } = useSedeStore()
    const { turns, refreshTurns } = useTurnStore()
    const { processes, refreshProcesses } = useProcessStore()
@@ -22,17 +23,27 @@ const ListSalons = () => {
       refreshProcesses()
    }, [])
 
+   useEffect(() => {
+      if (message) {
+         setDisplayMessage(message)
+         setIsSuccess(success)
+         const timer = setTimeout(() => {
+            setDisplayMessage('')
+         }, 3000) // Clear message after 3 seconds
+         return () => clearTimeout(timer)
+      }
+   }, [message, success])
+
    const handleDelete = async (salon_id: number, token: string | null) => {
       try {
          const isAdministrator = user?.role_id === 1
          if (!token) {
-            console.error("No se encontró el token de autenticación.")
+            setDisplayMessage("No se encontró el token de autenticación.")
+            setIsSuccess(false)
             return
          }
          await removeSalon(salon_id, isAdministrator, token)
-         setError("")
       } catch (error) {
-         setError("Error al eliminar el salón. Por favor, inténtalo de nuevo.")
          console.error("Error al eliminar el salón:", error)
       }
    }
@@ -41,7 +52,9 @@ const ListSalons = () => {
       <>
          <div>
             <h3>List Salons</h3>
-            {error && <p className="error">{error}</p>}
+            {displayMessage && (
+               <p style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
+            )}
             <table>
                <thead>
                   <tr>
@@ -65,7 +78,7 @@ const ListSalons = () => {
                         <td>{processes.find(process => process.id === salon.registration_process_id)?.name || salon.registration_process_id}</td>
                         <td>
                            <button onClick={() => console.log(`Edit salon with ID: ${salon.id}`)}>Editar</button>
-                           <button onClick={() => handleDelete(salon.id, token)}>Eliminar</button>
+                           <button onClick={() => handleDelete(salon.id, token)} disabled={loading}>Eliminar</button>
                         </td>
                      </tr>
                   ))}

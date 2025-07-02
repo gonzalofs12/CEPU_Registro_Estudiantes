@@ -10,7 +10,7 @@ const CreateProcessesForm = () => {
 
    const isAdministrator = user?.role_id === 1
 
-   const { addProcess } = useProcessStore()
+   const { addProcess, success, message, loading } = useProcessStore()
 
    const [formData, setFormData] = useState({
       name: '',
@@ -25,7 +25,20 @@ const CreateProcessesForm = () => {
       }))
    }, [user])
 
-   const [error, setError] = useState('')
+   const [displayMessage, setDisplayMessage] = useState('')
+   const [isSuccess, setIsSuccess] = useState(false)
+
+   useEffect(() => {
+      if (message) {
+         setDisplayMessage(message)
+         setIsSuccess(success)
+         const timer = setTimeout(() => {
+            setDisplayMessage('')
+         }, 3000) // Clear message after 3 seconds
+         return () => clearTimeout(timer)
+      }
+   }, [message, success])
+
    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { id, value } = e.target
       setFormData({ ...formData, [id]: value })
@@ -37,9 +50,7 @@ const CreateProcessesForm = () => {
       try {
          await addProcess(formData, token || '')
          setFormData({ ...formData, name: '', code: '' })
-         setError('')
       } catch (error) {
-         setError('Error al crear el proceso. Inténtalo de nuevo.')
          console.error('Error al crear el proceso:', error)
       }
    }
@@ -48,7 +59,9 @@ const CreateProcessesForm = () => {
       <>
          <form onSubmit={handleSubmit}>
             <h2>Crear Proceso de Inscripción</h2>
-            {error && <p className="error">{error}</p>}
+            {displayMessage && (
+               <p style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
+            )}
             <div>
                <label htmlFor="name">Nombre:</label>
                <input
@@ -69,7 +82,7 @@ const CreateProcessesForm = () => {
                   required
                />
             </div>
-            <button type="submit">Crear Proceso</button>
+            <button type="submit" disabled={loading}>Crear Proceso</button>
          </form>
       </>
    )

@@ -4,26 +4,37 @@ import { useUserData } from "../hooks/useUserData"
 import { usePaymentPlanStore } from "../store/usePaymentPlanStore"
 
 const ListPaymentPlans = () => {
-   const { paymentPlans, refreshPaymentPlans, removePaymentPlan } = usePaymentPlanStore()
+   const { paymentPlans, refreshPaymentPlans, removePaymentPlan, success, message, loading } = usePaymentPlanStore()
    const { user } = useUserData()
    const { token } = useGetToken()
-   const [error, setError] = useState("")
+   const [displayMessage, setDisplayMessage] = useState("")
+   const [isSuccess, setIsSuccess] = useState(false)
 
    useEffect(() => {
       refreshPaymentPlans()
    }, [])
 
+   useEffect(() => {
+      if (message) {
+         setDisplayMessage(message)
+         setIsSuccess(success)
+         const timer = setTimeout(() => {
+            setDisplayMessage('')
+         }, 3000) // Clear message after 3 seconds
+         return () => clearTimeout(timer)
+      }
+   }, [message, success])
+
    const handleDelete = async (paymentPlanId: number, token: string | null) => {
       try {
          const isAdministrator = user?.role_id === 1
          if (!token) {
-            setError("No se encontró el token de autenticación.")
+            setDisplayMessage("No se encontró el token de autenticación.")
+            setIsSuccess(false)
             return
          }
          await removePaymentPlan(paymentPlanId, isAdministrator, token)
-         setError("")
       } catch (error) {
-         setError("Error al eliminar el plan de pago. Por favor, inténtalo de nuevo.")
          console.error("Error al eliminar el plan de pago:", error)
       }
    }
@@ -32,7 +43,9 @@ const ListPaymentPlans = () => {
       <>
          <div>
             <h3>List Payment Plans</h3>
-            {error && <p className="error">{error}</p>}
+            {displayMessage && (
+               <p style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
+            )}
             <table>
                <thead>
                   <tr>
@@ -50,7 +63,7 @@ const ListPaymentPlans = () => {
                         <td>{paymentPlan.price}</td>
                         <td>
                            <button onClick={() => console.log(`Edit payment plan with ID: ${paymentPlan.id}`)}>Editar</button>
-                           <button onClick={() => handleDelete(paymentPlan.id, token)}>Eliminar</button>
+                           <button onClick={() => handleDelete(paymentPlan.id, token)} disabled={loading}>Eliminar</button>
                         </td>
                      </tr>
                   ))}

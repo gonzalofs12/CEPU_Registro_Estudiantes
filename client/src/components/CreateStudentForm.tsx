@@ -27,7 +27,7 @@ const CreateStudentForm = () => {
       refreshPaymentPlans()
    }, [])
 
-   const { addStudent } = useStudentStore()
+   const { addStudent, success, message, loading } = useStudentStore()
 
    const [formData, setFormData] = useState({
       name: '',
@@ -41,7 +41,19 @@ const CreateStudentForm = () => {
       sede_id: Number(''),
       turn_id: Number('')
    })
-   const [error, setError] = useState('')
+   const [displayMessage, setDisplayMessage] = useState('')
+   const [isSuccess, setIsSuccess] = useState(false)
+
+   useEffect(() => {
+      if (message) {
+         setDisplayMessage(message)
+         setIsSuccess(success)
+         const timer = setTimeout(() => {
+            setDisplayMessage('')
+         }, 3000) // Clear message after 3 seconds
+         return () => clearTimeout(timer)
+      }
+   }, [message, success])
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { id, value } = e.target
@@ -52,7 +64,8 @@ const CreateStudentForm = () => {
       e.preventDefault()
       try {
          if (!token) {
-            setError("No se encontró el token de autenticación.")
+            setDisplayMessage("No se encontró el token de autenticación.")
+            setIsSuccess(false)
             return
          }
          const payment_plan = paymentPlans.find(plan => plan.id == formData.payment_plan_id)
@@ -66,10 +79,10 @@ const CreateStudentForm = () => {
             record_number: record_number,
             date_inscription: date_inscription
          }
-         const response = await addStudent(updatedFormData, isAdministrator, token);
+         const response = await addStudent(updatedFormData, isAdministrator, token)
 
          // Descargar el PDF
-         if (response.pdf) {
+         if (response && response.pdf) {
             const blob = new Blob([Uint8Array.from(atob(response.pdf), c => c.charCodeAt(0))], { type: 'application/pdf' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -93,10 +106,8 @@ const CreateStudentForm = () => {
             sede_id: Number(''),
             turn_id: Number('')
          })
-         setError('')
       } catch (error) {
-         setError("Error al crear el estudiante.")
-         console.log('Error al crear el estudiante.', error)
+         console.error('Error al crear el estudiante.', error)
       }
    }
 
@@ -152,9 +163,11 @@ const CreateStudentForm = () => {
                   ))}
                </select>
             </label>
-            <button type="submit">Crear Estudiante</button>
+            <button type="submit" disabled={loading}>Crear Estudiante</button>
          </form>
-         {error && <p>{error}</p>}
+         {displayMessage && (
+            <p style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
+         )}
       </div>
    )
 }

@@ -9,10 +9,11 @@ import { usePaymentPlanStore } from "../store/usePaymentPlanStore"
 import { useProcessStore } from "../store/useProcessStore"
 
 const ListStudent = () => {
-   const { students, refreshStudents, removeStudent } = useStudentStore()
+   const { students, refreshStudents, removeStudent, success, message, loading } = useStudentStore()
    const { user } = useUserData()
    const { token } = useGetToken()
-   const [error, setError] = useState("")
+   const [displayMessage, setDisplayMessage] = useState("")
+   const [isSuccess, setIsSuccess] = useState(false)
    const [searchText, setSearchText] = useState("")
    const [filters, setFilters] = useState({
       payment_plan_id: "",
@@ -37,20 +38,16 @@ const ListStudent = () => {
       refreshProcesses()
    }, [])
 
-   const handleDelete = async (studentId: number, token: string | null) => {
-      try {
-         const isAdministrator = user?.role_id === 1
-         if (!token) {
-            setError("No se encontró el token de autenticación.")
-            return
-         }
-         await removeStudent(studentId, isAdministrator, token)
-         setError("")
-      } catch (error) {
-         setError("Error al eliminar la sede.")
-         console.log(error)
+   useEffect(() => {
+      if (message) {
+         setDisplayMessage(message)
+         setIsSuccess(success)
+         const timer = setTimeout(() => {
+            setDisplayMessage('')
+         }, 3000) // Clear message after 3 seconds
+         return () => clearTimeout(timer)
       }
-   }
+   }, [message, success])
 
    const filteredStudents = students.filter(student => {
       const matchesSearch = (
@@ -70,11 +67,40 @@ const ListStudent = () => {
       return matchesSearch && matchesFilters
    })
 
+   // * Paginación
+   const [currentPage, setCurrentPage] = useState(1)
+   const itemsPerPage = 40
+
+   useEffect(() => {
+      setCurrentPage(1)
+   }, [searchText, filters])
+
+   const totalPages = Math.ceil(filteredStudents.length / itemsPerPage) || 1
+   const indexOfLastItem = currentPage * itemsPerPage
+   const indexOfFirstItem = indexOfLastItem - itemsPerPage
+   const currentStudents = filteredStudents.slice(indexOfFirstItem, indexOfLastItem)
+
+   const handleDelete = async (studentId: number, token: string | null) => {
+      try {
+         const isAdministrator = user?.role_id === 1
+         if (!token) {
+            setDisplayMessage("No se encontró el token de autenticación.")
+            setIsSuccess(false)
+            return
+         }
+         await removeStudent(studentId, isAdministrator, token)
+      } catch (error) {
+         console.error('Error al eliminar el estudiante:', error)
+      }
+   }
+
    return (
       <>
          <div>
             <h2>Listado de Estudiantes</h2>
-            {error && <p className="error">{error}</p>}
+            {displayMessage && (
+               <p style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
+            )}
             <div>
                <input
                   type="text"
@@ -154,7 +180,7 @@ const ListStudent = () => {
                   </tr>
                </thead>
                <tbody>
-                  {filteredStudents.map((student) => (
+                  {currentStudents.map((student) => (
                      <tr key={student.id}>
                         <td>{student.record_number}</td>
                         <td>{student.name}</td>
@@ -168,12 +194,36 @@ const ListStudent = () => {
                         <td>{turns.find(turn => turn.id === student.turn_id)?.name || student.turn_id}</td>
                         <td>{salons.find(salon => salon.id === student.salon_id)?.name || student.salon_id}</td>
                         <td>
-                           <button onClick={() => handleDelete(student.id, token)}>Eliminar</button>
+                           <button onClick={() => handleDelete(student.id, token)} disabled={loading}>Eliminar</button>
                         </td>
                      </tr>
                   ))}
                </tbody>
             </table>
+            {/* Controles de paginación */}
+            <div>
+               <button
+                  onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+                  disabled={currentPage === 1}
+               >
+                  Anterior
+               </button>
+
+               <span> Página {currentPage} de {totalPages} </span>
+
+               <button
+                  onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+                  disabled={currentPage === totalPages || totalPages === 0}
+               >
+                  Siguiente
+               </button>
+            </div>
+            <div>
+               <span>
+                  Mostrando {indexOfFirstItem + 1} - {Math.min(indexOfLastItem, filteredStudents.length)}
+                  de {students.length} registros
+               </span>
+            </div>
          </div>
       </>
    )

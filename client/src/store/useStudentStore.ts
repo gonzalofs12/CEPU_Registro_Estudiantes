@@ -21,6 +21,8 @@ interface StudentState {
    student: Student | null
    students: Student[]
    error: string
+   success: boolean
+   message: string
    loading: boolean
    setStudent: (student: Student | null) => void
    clearStudent: () => void
@@ -34,44 +36,50 @@ export const useStudentStore = create<StudentState>((set) => ({
    students: [],
    student: null,
    error: '',
+   success: false,
+   message: '',
    loading: false,
    setStudent: (student) => set({ student }),
    clearStudent: () => set({ student: null }),
    refreshStudents: async () => {
-      set({ loading: true, error: '' })
+      set({ loading: true, error: '', success: false, message: '' })
       try {
          const students = await listStudents()
-         set({ students, loading: false })
+         set({ students, loading: false, success: true, message: 'Estudiantes cargados exitosamente.' })
       } catch (error) {
          console.error('Error fetching students:', error)
-         set({ error: 'Error al obtener los estudiantes', loading: false })
+         set({ error: 'Error al obtener los estudiantes', loading: false, success: false, message: 'Error al obtener los estudiantes.' })
       }
    },
    addStudent: async (studentData, is_administrator, token) => {
-      set({ loading: true, error: '' })
+      set({ loading: true, error: '', success: false, message: '' })
       try {
          const response = await createStudent(studentData, is_administrator, token)
          set((state) => ({
             students: [...state.students, { ...studentData, id: response.data.id }],
-            loading: false
+            loading: false,
+            success: true,
+            message: 'Estudiante creado exitosamente.'
          }))
          return response.data
       } catch (error) {
          console.error('Error creating student:', error)
-         set({ error: 'Error al crear el estudiante', loading: false })
+         set({ error: 'Error al crear el estudiante', loading: false, success: false, message: 'Error al crear el estudiante.' })
       }
    },
    removeStudent: async (studentId, is_administrator, token) => {
-      set({ loading: true, error: '' })
+      set({ loading: true, error: '', success: false, message: '' })
       try {
          await deleteStudent(studentId, is_administrator, token)
          set((state) => ({
             students: state.students.filter((student) => student.id !== studentId),
-            loading: false
+            loading: false,
+            success: true,
+            message: 'Estudiante eliminado exitosamente.'
          }))
       } catch (error) {
          console.error('Error deleting student:', error)
-         set({ error: 'Error al eliminar el estudiante', loading: false })
+         set({ error: 'Error al eliminar el estudiante', loading: false, success: false, message: 'Error al eliminar el estudiante.' })
       }
    }
 }))

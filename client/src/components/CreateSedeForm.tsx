@@ -1,20 +1,33 @@
-import React, { useState } from "react"
+import React from "react"
 import { useGetToken } from "../hooks/useGetToken"
 import { useUserData } from "../hooks/useUserData"
 import { useSedeStore } from "../store/useSedeStore"
+import { useEffect, useState } from "react"
 
 const CreateSedeForm = () => {
    const { user } = useUserData()
    const { token } = useGetToken()
    const isAdministrator = user?.role_id === 1
 
-   const { addSede } = useSedeStore()
+   const { addSede, success, message, loading } = useSedeStore()
 
    const [formData, setFormData] = useState({
       name: '',
       code: ''
    })
-   const [error, setError] = useState('')
+   const [displayMessage, setDisplayMessage] = useState('')
+   const [isSuccess, setIsSuccess] = useState(false)
+
+   useEffect(() => {
+      if (message) {
+         setDisplayMessage(message)
+         setIsSuccess(success)
+         const timer = setTimeout(() => {
+            setDisplayMessage('')
+         }, 3000) // Clear message after 3 seconds
+         return () => clearTimeout(timer)
+      }
+   }, [message, success])
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { id, value } = e.target
@@ -27,10 +40,8 @@ const CreateSedeForm = () => {
       try {
          await addSede(formData, isAdministrator, token || '')
          setFormData({ name: '', code: '' })
-         setError('')
       }
       catch (error) {
-         setError('Error al crear la sede. Inténtalo de nuevo.')
          console.error('Error al crear la sede:', error)
       }
    }
@@ -38,7 +49,9 @@ const CreateSedeForm = () => {
    return (
       <form onSubmit={handleSubmit}>
          <h2>Crear Sede</h2>
-         {error && <p className="error">{error}</p>}
+         {displayMessage && (
+            <p style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
+         )}
          <div>
             <label htmlFor="name">Nombre:</label>
             <input
@@ -59,7 +72,7 @@ const CreateSedeForm = () => {
                required
             />
          </div>
-         <button type="submit">Crear Sede</button>
+         <button type="submit" disabled={loading}>Crear Sede</button>
       </form>
    )
 }

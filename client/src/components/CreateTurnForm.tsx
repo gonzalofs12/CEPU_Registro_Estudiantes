@@ -1,19 +1,32 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useUserData } from '../hooks/useUserData'
 import { useGetToken } from '../hooks/useGetToken'
 import { useTurnStore } from '../store/useTurnStore'
+import { useEffect, useState } from 'react'
 
 const CreateTurnForm = () => {
    const { user } = useUserData()
    const { token } = useGetToken()
    const isAdministrator = user?.role_id === 1
 
-   const { addTurn } = useTurnStore()
+   const { addTurn, success, message, loading } = useTurnStore()
 
    const [formData, setFormData] = useState({
       name: ''
    })
-   const [error, setError] = useState('')
+   const [displayMessage, setDisplayMessage] = useState('')
+   const [isSuccess, setIsSuccess] = useState(false)
+
+   useEffect(() => {
+      if (message) {
+         setDisplayMessage(message)
+         setIsSuccess(success)
+         const timer = setTimeout(() => {
+            setDisplayMessage('')
+         }, 3000) // Clear message after 3 seconds
+         return () => clearTimeout(timer)
+      }
+   }, [message, success])
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { id, value } = e.target
@@ -26,9 +39,7 @@ const CreateTurnForm = () => {
       try {
          await addTurn(formData, isAdministrator, token || '')
          setFormData({ name: '' })
-         setError('')
       } catch (error) {
-         setError('Error al crear el turno. Inténtalo de nuevo.')
          console.error('Error al crear el turno:', error)
       }
    }
@@ -36,7 +47,9 @@ const CreateTurnForm = () => {
    return (
       <form onSubmit={handleSubmit}>
          <h2>Crear Turno</h2>
-         {error && <p className="error">{error}</p>}
+         {displayMessage && (
+            <p style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
+         )}
          <div>
             <label htmlFor="name">Nombre:</label>
             <input
@@ -47,7 +60,7 @@ const CreateTurnForm = () => {
                required
             />
          </div>
-         <button type="submit">Crear Turno</button>
+         <button type="submit" disabled={loading}>Crear Turno</button>
       </form>
    )
 }

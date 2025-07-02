@@ -21,7 +21,7 @@ const CreateSalonForm = () => {
 
    const isAdministrator = user?.role_id === 1
 
-   const { addSalon } = useSalonStore()
+   const { addSalon, success, message, loading } = useSalonStore()
 
    const [formData, setFormData] = useState({
       name: '',
@@ -30,7 +30,19 @@ const CreateSalonForm = () => {
       turn_id: 0,
       registration_process_id: 0
    })
-   const [error, setError] = useState('')
+   const [displayMessage, setDisplayMessage] = useState('')
+   const [isSuccess, setIsSuccess] = useState(false)
+
+   useEffect(() => {
+      if (message) {
+         setDisplayMessage(message)
+         setIsSuccess(success)
+         const timer = setTimeout(() => {
+            setDisplayMessage('')
+         }, 3000) // Clear message after 3 seconds
+         return () => clearTimeout(timer)
+      }
+   }, [message, success])
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { id, value } = e.target
@@ -51,9 +63,7 @@ const CreateSalonForm = () => {
             turn_id: 0,
             registration_process_id: 0
          })
-         setError('')
       } catch (error) {
-         setError('Error al crear el salón. Inténtalo de nuevo.')
          console.error('Error al crear el salón:', error)
       }
    }
@@ -61,7 +71,9 @@ const CreateSalonForm = () => {
    return (
       <form onSubmit={handleSubmit}>
          <h2>Crear Salón</h2>
-         {error && <p className="error">{error}</p>}
+         {displayMessage && (
+            <p style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
+         )}
          <div>
             <label htmlFor="name">Nombre:</label>
             <input
@@ -130,7 +142,7 @@ const CreateSalonForm = () => {
                ))}
             </select>
          </div>
-         <button type="submit">Crear Salón</button>
+         <button type="submit" disabled={loading}>Crear Salón</button>
       </form>
    )
 }

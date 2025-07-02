@@ -4,26 +4,37 @@ import { useUserData } from "../hooks/useUserData"
 import { useGetToken } from "../hooks/useGetToken"
 
 const ListTurns = () => {
-   const { turns, refreshTurns, removeTurn } = useTurnStore()
+   const { turns, refreshTurns, removeTurn, success, message, loading } = useTurnStore()
    const { user } = useUserData()
    const { token } = useGetToken()
-   const [error, setError] = useState("")
+   const [displayMessage, setDisplayMessage] = useState("")
+   const [isSuccess, setIsSuccess] = useState(false)
 
    useEffect(() => {
       refreshTurns()
    }, [])
 
+   useEffect(() => {
+      if (message) {
+         setDisplayMessage(message)
+         setIsSuccess(success)
+         const timer = setTimeout(() => {
+            setDisplayMessage('')
+         }, 3000) // Clear message after 3 seconds
+         return () => clearTimeout(timer)
+      }
+   }, [message, success])
+
    const handleDelete = async (turn_id: number, token: string | null) => {
       try {
          const isAdministrator = user?.role_id === 1
          if (!token) {
-            setError("No se encontró el token de autenticación.")
+            setDisplayMessage("No se encontró el token de autenticación.")
+            setIsSuccess(false)
             return
          }
          await removeTurn(turn_id, isAdministrator, token)
-         setError("")
       } catch (error) {
-         setError("Error al eliminar el turno. Por favor, inténtalo de nuevo.")
          console.error("Error al eliminar el turno:", error)
       }
    }
@@ -32,7 +43,9 @@ const ListTurns = () => {
       <>
          <div>
             <h3>List Turns</h3>
-            {error && <p className="error">{error}</p>}
+            {displayMessage && (
+               <p style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
+            )}
             <table>
                <thead>
                   <tr>
@@ -48,7 +61,7 @@ const ListTurns = () => {
                         <td>{turn.name}</td>
                         <td>
                            <button onClick={() => console.log(`Edit turn with ID: ${turn.id}`)}>Editar</button>
-                           <button onClick={() => handleDelete(turn.id, token)}>Eliminar</button>
+                           <button onClick={() => handleDelete(turn.id, token)} disabled={loading}>Eliminar</button>
                         </td>
                      </tr>
                   ))}
