@@ -13,9 +13,10 @@ async function initializeDatabase() {
 }
 
 initializeDatabase().then(() => {
-  const PORT = process.env.PORT || 3001
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`)
-  })
+  const PORT = process.env.PORT || 3001;
+
+   app.listen(PORT, () => {
+     console.log(`Server running on port ${PORT}`);
+   });
 })
 
