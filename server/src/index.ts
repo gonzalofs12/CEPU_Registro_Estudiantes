@@ -20,3 +20,5 @@ initializeDatabase().then(() => {
   });
 })
 
+export default app
+
