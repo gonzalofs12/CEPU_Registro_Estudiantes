@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useUserStore } from '../store/useUserStore'
 import { useUserData } from '../hooks/useUserData'
 import { useGetToken } from '../hooks/useGetToken'

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useProcessStore } from '../store/useProcessStore'
 import { useUserData } from '../hooks/useUserData'
 import { useAuthStore } from '../store/useAuthStore'

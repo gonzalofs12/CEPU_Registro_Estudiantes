@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import ChangePasswordForm from '../components/ChangePasswordForm'
 import CreateUserForm from '../components/CreateUserForm'
 import ListUser from '../components/ListUser'

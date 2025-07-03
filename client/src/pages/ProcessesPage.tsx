@@ -1,4 +1,3 @@
-import React from 'react'
 import CreateProcessesForm from '../components/CreateProcessesForm'
 import ListProcesses from '../components/ListProcesses'
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FaHome, FaClock, FaBuilding, FaChair, FaClipboardList, FaMoneyBillWave, FaUserGraduate, FaUser } from 'react-icons/fa'
 

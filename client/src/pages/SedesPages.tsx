@@ -1,4 +1,4 @@
-import React from 'react'
+
 import CreateSedeForm from '../components/CreateSedeForm'
 import ListSedes from '../components/ListSedes'
 

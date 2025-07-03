@@ -1,4 +1,4 @@
-import React from 'react'
+
 import CreateSalonForm from '../components/CreateSalonForm'
 import ListSalons from '../components/ListSalons'
 

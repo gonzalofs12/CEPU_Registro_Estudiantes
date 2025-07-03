@@ -1,4 +1,3 @@
-import React from 'react'
 import { useAuthStore } from '../store/useAuthStore'
 import { useUserStore } from '../store/useUserStore'
 import { useUserData } from '../hooks/useUserData'
