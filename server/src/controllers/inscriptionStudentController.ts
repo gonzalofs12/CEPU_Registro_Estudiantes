@@ -6,7 +6,7 @@ import { transformObjectToUpperCase } from "../utils/textTransform";
 export const createStudent = async (req: Request, res: Response, next: NextFunction) => {
    try {
       const userRole = req.body.is_administrator
-      const { name, last_name, dni, record_number, date_inscription, payment_plan_id, need_to_pay, registration_process_id, sede_id, turn_id } = transformObjectToUpperCase(req.body.studentData)
+      const { name, last_name, dni, phone, record_number, date_inscription, payment_plan_id, need_to_pay, registration_process_id, sede_id, turn_id } = transformObjectToUpperCase(req.body.studentData)
 
       const [salonRows] = await pool.execute(
          `
@@ -46,6 +46,7 @@ export const createStudent = async (req: Request, res: Response, next: NextFunct
          name,
          last_name,
          dni,
+         phone,
          record_number,
          sede: sedeData.name,
          salon: salon.name,
@@ -63,7 +64,7 @@ export const createStudent = async (req: Request, res: Response, next: NextFunct
          message: 'Estudiante creado exitosamente',
          data: {
             id: (response as any)[0].insertId,
-            pdf: pdfBuffer.toString('base64')
+            pdf_file: pdfBuffer.toString('base64')
          }
       })
    } catch (error) {

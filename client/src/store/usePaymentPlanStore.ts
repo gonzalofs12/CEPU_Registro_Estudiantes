@@ -4,6 +4,7 @@ import { createPaymentPlan, deletePaymentPlan, listPaymentPlans } from "../servi
 interface PaymentPlan {
    id: number
    name: string
+   code: string
    price: number
 }
 
@@ -35,6 +36,7 @@ export const usePaymentPlanStore = create<PaymentPlanState>((set) => ({
       set({ loading: true, error: '', success: false, message: '' })
       try {
          const response = await listPaymentPlans()
+         console.log(response)
          set({ paymentPlans: response.data, loading: false, success: true, message: 'Planes de pago cargados exitosamente.' })
       } catch (error) {
          console.error('Error fetching payment plans:', error)
@@ -47,7 +49,7 @@ export const usePaymentPlanStore = create<PaymentPlanState>((set) => ({
       try {
          const response = await createPaymentPlan(paymentPlanData, is_administrator, token)
          set((state) => ({
-            paymentPlans: [...state.paymentPlans, { name: response.data.name, price: response.data.price, id: response.data.id }],
+            paymentPlans: [...state.paymentPlans, { name: response.data.name, code: response.data.code, price: response.data.price, id: response.data.id }],
             loading: false,
             success: true,
             message: 'Plan de pago creado exitosamente.'

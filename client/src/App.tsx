@@ -22,6 +22,20 @@ const ProtectedRoute = ({ children }: { children: React.JSX.Element }) => {
    return isAuthenticated() ? children : <Navigate to="/login" replace />
 }
 
+const AppLayout = ({ children }: { children: React.JSX.Element }) => {
+   return (
+      <div className="flex h-screen bg-gray-100">
+         <Slidebar />
+         <div className="flex-1 flex flex-col overflow-hidden ml-20 md:ml-20 transition-all duration-300">
+            <Navbar />
+            <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4">
+               {children}
+            </main>
+         </div>
+      </div>
+   )
+}
+
 function App() {
    useFetchUserOnLoad() // Fetch user data on component load
    return (
@@ -37,13 +51,9 @@ function App() {
                   path='/'
                   element={
                      <ProtectedRoute>
-                        <div >
-                           <Slidebar />
-                           <div>
-                              <Navbar />
-                              <DashboardPage />
-                           </div>
-                        </div>
+                        <AppLayout>
+                           <DashboardPage />
+                        </AppLayout>
                      </ProtectedRoute>
                   }
                />
@@ -51,13 +61,9 @@ function App() {
                   path='/turns'
                   element={
                      <ProtectedRoute>
-                        <div >
-                           <Slidebar />
-                           <div>
-                              <Navbar />
-                              <TurnsPage />
-                           </div>
-                        </div>
+                        <AppLayout>
+                           <TurnsPage />
+                        </AppLayout>
                      </ProtectedRoute>
                   }
                />
@@ -65,13 +71,9 @@ function App() {
                   path='/sedes'
                   element={
                      <ProtectedRoute>
-                        <div >
-                           <Slidebar />
-                           <div>
-                              <Navbar />
-                              <SedesPages />
-                           </div>
-                        </div>
+                        <AppLayout>
+                           <SedesPages />
+                        </AppLayout>
                      </ProtectedRoute>
                   }
                />
@@ -79,13 +81,9 @@ function App() {
                   path='/salons'
                   element={
                      <ProtectedRoute>
-                        <div >
-                           <Slidebar />
-                           <div>
-                              <Navbar />
-                              <SalonsPage />
-                           </div>
-                        </div>
+                        <AppLayout>
+                           <SalonsPage />
+                        </AppLayout>
                      </ProtectedRoute>
                   }
                />
@@ -93,13 +91,9 @@ function App() {
                   path='/processes'
                   element={
                      <ProtectedRoute>
-                        <div >
-                           <Slidebar />
-                           <div>
-                              <Navbar />
-                              <ProcessesPage />
-                           </div>
-                        </div>
+                        <AppLayout>
+                           <ProcessesPage />
+                        </AppLayout>
                      </ProtectedRoute>
                   }
                />
@@ -107,13 +101,9 @@ function App() {
                   path='/inscriptions'
                   element={
                      <ProtectedRoute>
-                        <div >
-                           <Slidebar />
-                           <div>
-                              <Navbar />
-                              <InscriptionsPage />
-                           </div>
-                        </div>
+                        <AppLayout>
+                           <InscriptionsPage />
+                        </AppLayout>
                      </ProtectedRoute>
                   }
                />
@@ -121,13 +111,9 @@ function App() {
                   path='/payment-plans'
                   element={
                      <ProtectedRoute>
-                        <div >
-                           <Slidebar />
-                           <div>
-                              <Navbar />
-                              <PaymentPlansPage />
-                           </div>
-                        </div>
+                        <AppLayout>
+                           <PaymentPlansPage />
+                        </AppLayout>
                      </ProtectedRoute>
                   }
                />
@@ -135,13 +121,9 @@ function App() {
                   path='/profile'
                   element={
                      <ProtectedRoute>
-                        <div >
-                           <Slidebar />
-                           <div>
-                              <Navbar />
-                              <ProfilePage />
-                           </div>
-                        </div>
+                        <AppLayout>
+                           <ProfilePage />
+                        </AppLayout>
                      </ProtectedRoute>
                   }
                />

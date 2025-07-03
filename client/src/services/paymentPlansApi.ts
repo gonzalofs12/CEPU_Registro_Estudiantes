@@ -5,6 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL
 interface PaymentPlan {
    id: number
    name: string
+   code: string
    price: number
 }
 

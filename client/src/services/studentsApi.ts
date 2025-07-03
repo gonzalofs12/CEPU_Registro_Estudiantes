@@ -7,6 +7,7 @@ interface Student {
    name: string,
    last_name: string,
    dni: number
+   phone?: number,
    record_number: number,
    date_inscription: string,
    payment_plan_id: number,
@@ -15,6 +16,7 @@ interface Student {
    sede_id: number
    turn_id: number
    salon_id?: number
+   pdf_file?: string
 }
 
 export const createStudent = async (studentData: Omit<Student, 'id'>, is_administrator: boolean, token: string) => {

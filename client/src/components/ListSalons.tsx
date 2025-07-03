@@ -50,35 +50,32 @@ const ListSalons = () => {
 
    return (
       <>
-         <div>
-            <h3>List Salons</h3>
+         <div className="overflow-x-auto">
             {displayMessage && (
                <p style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
             )}
-            <table>
+            <table className="min-w-full bg-white border border-gray-200">
                <thead>
                   <tr>
-                     <th>ID</th>
-                     <th>Nombre</th>
-                     <th>Capacidad</th>
-                     <th>Sede</th>
-                     <th>Turno</th>
-                     <th>Proceso de Registro</th>
-                     <th>Acciones</th>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nombre</th>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Capacidad</th>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Sede</th>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Turno</th>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Proceso de Registro</th>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Acciones</th>
                   </tr>
                </thead>
                <tbody id="salon-list">
                   {salons.map(salon => (
-                     <tr key={salon.id}>
-                        <td>{salon.id}</td>
-                        <td>{salon.name}</td>
-                        <td>{salon.capacity}</td>
-                        <td>{sedes.find(sede => sede.id === salon.sede_id)?.name || salon.sede_id}</td>
-                        <td>{turns.find(turn => turn.id === salon.turn_id)?.name || salon.turn_id}</td>
-                        <td>{processes.find(process => process.id === salon.registration_process_id)?.name || salon.registration_process_id}</td>
+                     <tr key={salon.id} className="hover:bg-gray-100">
+                        <td className="py-2 px-4 border-b border-gray-200">{salon.name}</td>
+                        <td className="py-2 px-4 border-b border-gray-200">{salon.capacity}</td>
+                        <td className="py-2 px-4 border-b border-gray-200">{sedes.find(sede => sede.id === salon.sede_id)?.code || salon.sede_id}</td>
+                        <td className="py-2 px-4 border-b border-gray-200">{turns.find(turn => turn.id === salon.turn_id)?.name || salon.turn_id}</td>
+                        <td className="py-2 px-4 border-b border-gray-200">{processes.find(process => process.id === salon.registration_process_id)?.name || salon.registration_process_id}</td>
                         <td>
-                           <button onClick={() => console.log(`Edit salon with ID: ${salon.id}`)}>Editar</button>
-                           <button onClick={() => handleDelete(salon.id, token)} disabled={loading}>Eliminar</button>
+                           <button onClick={() => console.log(`Edit salon with ID: ${salon.id}`)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs mr-2">Editar</button>
+                           <button onClick={() => handleDelete(salon.id, token)} disabled={loading} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs">Eliminar</button>
                         </td>
                      </tr>
                   ))}

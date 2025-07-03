@@ -14,6 +14,7 @@ const CreatePaymentPlanForm = () => {
 
    const [formData, setFormData] = useState({
       name: '',
+      code: '',
       price: Number('')
    })
    const [displayMessage, setDisplayMessage] = useState('')
@@ -39,39 +40,51 @@ const CreatePaymentPlanForm = () => {
       e.preventDefault()
       try {
          await addPaymentPlan(formData, isAdministrator, token || '')
-         setFormData({ name: '', price: Number('') })
+         setFormData({ name: '', code: '', price: Number('') })
       } catch (error) {
          console.error('Error al crear el plan de pago:', error)
       }
    }
 
    return (
-      <form onSubmit={handleSubmit}>
-         <h2>Crear Plan de Pago</h2>
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto">
          {displayMessage && (
-            <p style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
+            <p className="text-sm mb-4" style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
          )}
-         <div>
-            <label htmlFor="name">Nombre:</label>
+         <div className="mb-4">
+            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
             <input
                type="text"
                id="name"
                value={formData.name}
                onChange={handleChange}
                required
+               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
          </div>
-         <div>
-            <label htmlFor="price">Precio:</label>
+         <div className="mb-4">
+            <label htmlFor="code" className="block text-gray-700 text-sm font-bold mb-2">Código:</label>
+            <input
+               type="text"
+               id="code"
+               value={formData.code}
+               onChange={handleChange}
+               required
+               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+         </div>
+         <div className="mb-4">
+            <label htmlFor="price" className="block text-gray-700 text-sm font-bold mb-2">Precio:</label>
             <input
                type="number"
                id="price"
                value={formData.price}
                onChange={handleChange}
                required
+               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
          </div>
-         <button type="submit" disabled={loading}>Crear Plan de Pago</button>
+         <button type="submit" disabled={loading} className='bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out cursor-pointer mb-4'>Crear Plan de Pago</button>
       </form>
    )
 }

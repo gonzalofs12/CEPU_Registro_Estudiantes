@@ -12,11 +12,11 @@ export const createPaymentPlan = async (req: Request, res: Response, next: NextF
          })
       }
 
-      const { name, price } = transformObjectToUpperCase(req.body.paymentPlanData)
+      const { name, code, price } = transformObjectToUpperCase(req.body.paymentPlanData)
 
       const response = await pool.execute(
-         'INSERT INTO payment_plans (name, price) VALUES (?, ?)',
-         [name, price]
+         'INSERT INTO payment_plans (name, code, price) VALUES (?, ?, ?)',
+         [name, code, price]
       )
       res.json({
          success: true,
@@ -24,6 +24,7 @@ export const createPaymentPlan = async (req: Request, res: Response, next: NextF
          data: {
             id: (response as any)[0].insertId,
             name,
+            code,
             price
          }
       })
@@ -34,7 +35,7 @@ export const createPaymentPlan = async (req: Request, res: Response, next: NextF
 
 export const listPaymentPlans = async (req: Request, res: Response, next: NextFunction) => {
    try {
-      const [rows] = await pool.execute('SELECT id, name, price FROM payment_plans')
+      const [rows] = await pool.execute('SELECT id, name, code, price FROM payment_plans')
       res.json({
          success: true,
          data: rows

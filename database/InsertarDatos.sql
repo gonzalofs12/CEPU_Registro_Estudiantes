@@ -22,7 +22,7 @@ VALUES ('A22', 40, 1, 1,1);
 INSERT INTO students (name, capacity, sede_id,turn_id, registration_process_id)
 VALUES ('A22', 40, 1, 1,1);
 
-ALTER TABLE sedes ADD COLUMN code VARCHAR(50) NOT NULL UNIQUE;
+ALTER TABLE students ADD COLUMN phone BIGINT DEFAULT 0;
 
 ALTER TABLE students
 ADD COLUMN pdf_file MEDIUMBLOB;

@@ -69,38 +69,40 @@ const CreateSalonForm = () => {
    }
 
    return (
-      <form onSubmit={handleSubmit}>
-         <h2>Crear Salón</h2>
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto">
          {displayMessage && (
             <p style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
          )}
-         <div>
-            <label htmlFor="name">Nombre:</label>
+         <div className="mb-4">
+            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
             <input
                type="text"
                id="name"
                value={formData.name}
                onChange={handleChange}
                required
+               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
          </div>
-         <div>
-            <label htmlFor="capacity">Capacidad:</label>
+         <div className="mb-4">
+            <label htmlFor="capacity" className="block text-gray-700 text-sm font-bold mb-2">Capacidad:</label>
             <input
                type="number"
                id="capacity"
                value={formData.capacity}
                onChange={handleChange}
                required
+               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
          </div>
-         <div>
-            <label htmlFor="sede_id">Sede ID:</label>
+         <div className="mb-4">
+            <label htmlFor="sede_id" className="block text-gray-700 text-sm font-bold mb-2">Sede:</label>
             <select
                id="sede_id"
                value={formData.sede_id}
                onChange={handleChange}
                required
+               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             >
                <option value="">Seleccione una sede</option>
                {sedes.map(sede => (
@@ -110,13 +112,14 @@ const CreateSalonForm = () => {
                ))}
             </select>
          </div>
-         <div>
-            <label htmlFor="turn_id">Turno ID:</label>
+         <div className="mb-4">
+            <label htmlFor="turn_id" className="block text-gray-700 text-sm font-bold mb-2">Turno:</label>
             <select
                id="turn_id"
                value={formData.turn_id}
                onChange={handleChange}
                required
+               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             >
                <option value="">Seleccione un turno</option>
                {turns.map(turn => (
@@ -126,13 +129,14 @@ const CreateSalonForm = () => {
                ))}
             </select>
          </div>
-         <div>
-            <label htmlFor="registration_process_id">Proceso de Registro ID:</label>
+         <div className="mb-4">
+            <label htmlFor="registration_process_id" className="block text-gray-700 text-sm font-bold mb-2">Proceso de Registro:</label>
             <select
                id="registration_process_id"
                value={formData.registration_process_id}
                onChange={handleChange}
                required
+               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             >
                <option value="">Seleccione un proceso de registro</option>
                {processes.map(process => (
@@ -142,7 +146,7 @@ const CreateSalonForm = () => {
                ))}
             </select>
          </div>
-         <button type="submit" disabled={loading}>Crear Salón</button>
+         <button type="submit" disabled={loading} className='bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out cursor-pointer mb-4'>Crear Salón</button>
       </form>
    )
 }

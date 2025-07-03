@@ -31,33 +31,31 @@ const ListUser = () => {
 
    return (
       <>
-         <div>
-            <h3>ListUser</h3>
-            {error && <p className="error">{error}</p>}
-            <table>
+         <div className="overflow-x-auto">
+            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+            <table className="min-w-full bg-white border border-gray-200">
                <thead>
                   <tr>
-                     <th>ID</th>
-                     <th>Nombre</th>
-                     <th>DNI</th>
-                     <th>Rol</th>
-                     <th>Acciones</th>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nombre</th>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">DNI</th>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Rol</th>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Acciones</th>
                   </tr>
                </thead>
                <tbody id="user-list">
                   {
                      users.map(user => (
-                        <tr key={user.id}>
-                           <td>{user.id}</td>
-                           <td>{user.name}</td>
-                           <td>{user.dni}</td>
-                           <td>{user.role_id === 1 ? 'Administrador' : 'Coordinador'}</td>
-                           <td>
-                              <button onClick={() => console.log(`Edit user with ID: ${user.id}`)}>Editar</button>
-                              <button onClick={() => handleDelete(user.id, token)}>Eliminar</button>
+                        <tr key={user.id} className="hover:bg-gray-100">
+                           <td className="py-2 px-4 border-b border-gray-200">{user.name}</td>
+                           <td className="py-2 px-4 border-b border-gray-200">{user.dni}</td>
+                           <td className="py-2 px-4 border-b border-gray-200">{user.role_id === 1 ? 'Administrador' : 'Coordinador'}</td>
+                           <td className="py-2 px-4 border-b border-gray-200">
+                              <button onClick={() => console.log(`Edit user with ID: ${user.id}`)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs mr-2">Editar</button>
+                              <button onClick={() => handleDelete(user.id, token)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs">Eliminar</button>
                            </td>
                         </tr>
-                     ))}
+                     ))
+                  }
                </tbody>
             </table>
          </div>

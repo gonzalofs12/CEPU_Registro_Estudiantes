@@ -47,28 +47,27 @@ const ListProcesses = () => {
    return (
       <>
          <div>
-            <h3>Lista de Procesos</h3>
             {displayMessage && (
                <p style={{ color: isSuccess ? 'green' : 'red' }}>{displayMessage}</p>
             )}
-            <table>
+            <table className="min-w-full bg-white border border-gray-200">
                <thead>
                   <tr>
-                     <th>ID</th>
-                     <th>Nombre</th>
-                     <th>Acciones</th>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ID</th>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nombre</th>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Acciones</th>
                   </tr>
                </thead>
                <tbody id="user-list">
                   {
                      processes.map(process => (
-                        <tr key={process.id}>
-                           <td>{process.code}</td>
-                           <td>{process.name}</td>
-                           <td>
-                              <button onClick={() => console.log(`Edit user with ID: ${process.id}`)}>Editar</button>
-                           <button onClick={() => handleDelete(process.id)} disabled={loading}>Eliminar</button>
-                        </td>
+                        <tr key={process.id} className="hover:bg-gray-100">
+                           <td className="py-2 px-4 border-b border-gray-200">{process.code}</td>
+                           <td className="py-2 px-4 border-b border-gray-200">{process.name}</td>
+                           <td className="py-2 px-4 border-b border-gray-200">
+                              <button onClick={() => console.log(`Edit user with ID: ${process.id}`)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs mr-2">Editar</button>
+                              <button onClick={() => handleDelete(process.id)} disabled={loading} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs">Eliminar</button>
+                           </td>
                         </tr>
                      ))}
                </tbody>

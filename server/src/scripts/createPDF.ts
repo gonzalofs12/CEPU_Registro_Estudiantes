@@ -7,6 +7,7 @@ interface StudentData {
    name: string;
    last_name: string;
    dni: number;
+   phone: number;
    record_number: number;
    sede: string;
    salon: string;
@@ -30,37 +31,41 @@ function getA5ContentWithHeaderFooter(student: StudentData, logoBase64: string) 
          {
             image: 'data:image/png;base64,' + logoBase64,
             width: 40,
+            margin: [0, 15, 0, 0],
          },
          {
             text: 'CENTRO DE ESTUDIOS PRE UNIVERSITARIO',
             style: 'title',
             alignment: 'center',
-            margin: [0, 10, 0, 0],
+            margin: [0, 15, 0, 0],
          },
          {
             width: 40,
             text: '',
          },
       ],
-      margin: [0, 0, 0, 10],
+      margin: [0, 0, 0, 5],
    };
 
    const footer = {
       columns: [
-         { text: 'Dirección: Calle Ficticia 123 - Tel: 555-1234', alignment: 'left', fontSize: 9 },
-         { text: 'www.centroejemplo.edu', alignment: 'right', fontSize: 9 }
+         { text: 'Dirección: Calle Ficticia 123 - Tel: 555-1234', alignment: 'left', fontSize: 9, margin: [10, 10, 0, 0] },
+         { text: 'www.centroejemplo.edu', alignment: 'right', fontSize: 9, margin: [0, 10, 10, 0] }
       ],
       margin: [0, 10, 0, 0],
    };
 
    const content = [
-      { text: 'Datos del Alumno', style: 'header' },
-      { text: `Nombre: ${student.name} ${student.last_name}`, margin: [0, 10, 0, 5] },
-      { text: `DNI: ${student.dni}`, margin: [0, 0, 0, 5] },
-      { text: `Número de Registro: ${student.record_number}`, margin: [0, 0, 0, 5] },
-      { text: `Sede: ${student.sede}`, margin: [0, 0, 0, 5] },
-      { text: `Salón: ${student.salon}`, margin: [0, 0, 0, 5] },
-      { text: `Turno: ${student.turn}`, margin: [0, 0, 0, 5] },
+      { text: `Inscripción - EXP: N° ${student.record_number}`, style: 'header' },
+      { text: 'Datos del Alumno', style: 'title' },
+      { text: `Nombre: ${student.name}`, style: 'data' },
+      { text: `Apellido: ${student.last_name}`, style: 'data' },
+      { text: `DNI: ${student.dni}`, style: 'data' },
+      { text: `Celular: ${student.phone}`, style: 'data' },
+      { text: 'Información académica', style: 'title' },
+      { text: `Sede: ${student.sede}`, style: 'data' },
+      { text: `Salón: ${student.salon}`, style: 'data' },
+      { text: `Turno: ${student.turn}`, style: 'data' },
    ];
 
    return {
@@ -135,6 +140,11 @@ export async function generateStudentPDF(student: StudentData): Promise<Buffer> 
             fontSize: 14,
             bold: true,
             color: '#003366',
+         },
+         data: {
+            fontSize: 12,
+            alignment: 'left',
+            margin: [0, 5, 0, 5],
          },
       },
       defaultStyle: {

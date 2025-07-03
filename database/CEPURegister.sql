@@ -48,6 +48,7 @@ CREATE TABLE salons (
 CREATE TABLE payment_plans (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL UNIQUE,
+  code VARCHAR(50) NOT NULL UNIQUE,
   price INT NOT NULL
 );
 -- Tabla de alumnos
@@ -56,6 +57,7 @@ CREATE TABLE students (
   name VARCHAR(100) NOT NULL,
   last_name VARCHAR(100) NOT NULL,
   dni INT NOT NULL,
+  phone BIGINT DEFAULT 0,
   record_number BIGINT NOT NULL UNIQUE,
   date_inscription DATE NOT NULL,
   payment_plan_id INT NOT NULL,
