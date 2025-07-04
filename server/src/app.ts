@@ -14,9 +14,7 @@ import { errorHandler } from './middlewares/errorMiddleware'
 
 const app = express()
 
-app.use(cors({
-  origin: process.env.NODE_ENV || '*'
-}))
+app.use(cors())
 app.use(express.json())
 app.use(morgan('dev'))
 
