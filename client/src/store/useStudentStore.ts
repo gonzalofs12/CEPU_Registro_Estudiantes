@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import { createStudent, deleteStudent, listStudents } from "../services/studentsApi"
+import { createStudent, deleteStudent, downloadPDF, listStudents } from "../services/studentsApi"
 
 interface Student {
    id: number
@@ -17,6 +17,13 @@ interface Student {
    salon_id?: number
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    pdf_file?: string | any
+   photo_base_64?: string
+}
+
+interface PDF {
+   dni: number,
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   pdf_file?: string | any
 }
 
 interface StudentState {
@@ -32,6 +39,7 @@ interface StudentState {
    // addStudent: (studentData: Omit<Student, 'id'>, is_administrator: boolean, token: string) => Promise<>
    addStudent: (studentData: Omit<Student, 'id'>, is_administrator: boolean, token: string) => Promise<Student>
    removeStudent: (studentId: number, is_administrator: boolean, token: string) => Promise<void>
+   downloadPDF: (studentId: number, is_administrator: boolean, token: string) => Promise<PDF>
 }
 
 export const useStudentStore = create<StudentState>((set) => ({
@@ -56,7 +64,8 @@ export const useStudentStore = create<StudentState>((set) => ({
    addStudent: async (studentData, is_administrator, token) => {
       set({ loading: true, error: '', success: false, message: '' })
       try {
-         const response = await createStudent(studentData, is_administrator, token)
+         const photo = studentData.photo_base_64 || ''
+         const response = await createStudent(studentData, photo, is_administrator, token)
          set((state) => ({
             students: [...state.students, { ...studentData, id: response.data.id }],
             loading: false,
@@ -83,5 +92,15 @@ export const useStudentStore = create<StudentState>((set) => ({
          console.error('Error deleting student:', error)
          set({ error: 'Error al eliminar el estudiante', loading: false, success: false, message: 'Error al eliminar el estudiante.' })
       }
-   }
+   },
+   downloadPDF: async (studentId, is_administrator, token) => {
+      set({ loading: true, error: '', success: false, message: '' })
+      try {
+         const response = await downloadPDF(studentId, is_administrator, token)
+         return response.data[0]
+      } catch (error) {
+         console.error('Error creating student:', error)
+         set({ error: 'Error al crear el estudiante', loading: false, success: false, message: 'Error al crear el estudiante.' })
+      }
+   },
 }))

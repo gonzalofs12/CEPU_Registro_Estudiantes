@@ -25,7 +25,7 @@ const fonts = {
 };
 
 // Función para generar el contenido A5
-function getA5ContentWithHeaderFooter(student: StudentData, logoBase64: string) {
+function getA5ContentWithHeaderFooter(student: StudentData, photo_base_64: string, logoBase64: string) {
    const header = {
       columns: [
          {
@@ -55,19 +55,62 @@ function getA5ContentWithHeaderFooter(student: StudentData, logoBase64: string) 
       margin: [0, 10, 0, 0],
    };
 
+   const imageDataURL = `data:image/jpg;base64,${photo_base_64}`;
+   // const content = [
+   //    { text: `Inscripción - EXP: N° ${student.record_number}`, style: 'header' },
+   //    { text: 'Datos del Alumno', style: 'title' },
+   //    { text: `Nombre: ${student.name}`, style: 'data' },
+   //    { text: `Apellido: ${student.last_name}`, style: 'data' },
+   //    { text: `DNI: ${student.dni}`, style: 'data' },
+   //    { text: `Celular: ${student.phone}`, style: 'data' },
+   //    {
+   //       image: imageDataURL,
+   //       width: 100,
+   //       height: 120,
+   //       alignment: 'center',
+   //       margin: [0, 10, 0, 10],
+   //    },
+   //    { text: 'Información académica', style: 'title' },
+   //    { text: `Sede: ${student.sede}`, style: 'data' },
+   //    { text: `Salón: ${student.salon}`, style: 'data' },
+   //    { text: `Turno: ${student.turn}`, style: 'data' },
+   // ];
+
    const content = [
-      { text: `Inscripción - EXP: N° ${student.record_number}`, style: 'header' },
-      { text: 'Datos del Alumno', style: 'title' },
-      { text: `Nombre: ${student.name}`, style: 'data' },
-      { text: `Apellido: ${student.last_name}`, style: 'data' },
-      { text: `DNI: ${student.dni}`, style: 'data' },
-      { text: `Celular: ${student.phone}`, style: 'data' },
-      { text: 'Información académica', style: 'title' },
+      {
+         text: `Inscripción - EXP: N° ${student.record_number}`,
+         style: 'header'
+      },
+      {
+         columns: [
+            [
+               { text: 'Datos del Alumno', style: 'title' },
+               { text: `Nombre: ${student.name}`, style: 'data' },
+               { text: `Apellido: ${student.last_name}`, style: 'data' },
+               { text: `DNI: ${student.dni}`, style: 'data' },
+               { text: `Celular: ${student.phone}`, style: 'data' },
+            ],
+            [
+               {
+                  image: imageDataURL,
+                  width: 120,
+                  height: 80,
+                  alignment: 'center',
+                  margin: [0, 0, 0, 10],
+               },
+            ],
+         ],
+         columnGap: 20, // Espacio entre las columnas
+      },
+      {
+         text: 'Información académica',
+         style: 'title',
+         margin: [0, 20, 0, 10] // Espacio adicional debajo de la sección de datos del alumno
+      },
       { text: `Sede: ${student.sede}`, style: 'data' },
       { text: `Salón: ${student.salon}`, style: 'data' },
       { text: `Turno: ${student.turn}`, style: 'data' },
    ];
-
    return {
       table: {
          widths: ['*'],
@@ -102,12 +145,12 @@ function getA5ContentWithHeaderFooter(student: StudentData, logoBase64: string) 
 }
 
 // Función para generar el PDF A4 con dos copias del contenido A5
-export async function generateStudentPDF(student: StudentData): Promise<Buffer> {
+export async function generateStudentPDF(student: StudentData, photo_base_64: string): Promise<Buffer> {
    const printer = new PdfPrinter(fonts);
    const logoBase64 = fs.readFileSync(path.join(process.cwd(), 'assets', 'CEPU.png')).toString('base64');
 
-   const a5Content1 = getA5ContentWithHeaderFooter(student, logoBase64);
-   const a5Content2 = getA5ContentWithHeaderFooter(student, logoBase64);
+   const a5Content1 = getA5ContentWithHeaderFooter(student, photo_base_64, logoBase64);
+   const a5Content2 = getA5ContentWithHeaderFooter(student, photo_base_64, logoBase64);
 
    const docDefinition: TDocumentDefinitions = {
       pageSize: 'A4',

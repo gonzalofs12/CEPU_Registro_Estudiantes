@@ -7,7 +7,7 @@ export const createStudent = async (req: Request, res: Response, next: NextFunct
    try {
       const userRole = req.body.is_administrator
       const { name, last_name, dni, phone, record_number, date_inscription, payment_plan_id, need_to_pay, registration_process_id, sede_id, turn_id } = transformObjectToUpperCase(req.body.studentData)
-
+      const photo_base_64 = req.body.photo
       const [salonRows] = await pool.execute(
          `
          SELECT id, name, capacity
@@ -50,8 +50,8 @@ export const createStudent = async (req: Request, res: Response, next: NextFunct
          record_number,
          sede: sedeData.name,
          salon: salon.name,
-         turn: turnData.name
-      });
+         turn: turnData.name,
+      }, photo_base_64);
 
       // Insertar estudiante con el PDF
       const response = await pool.execute(
@@ -74,7 +74,7 @@ export const createStudent = async (req: Request, res: Response, next: NextFunct
 
 export const listStudents = async (req: Request, res: Response, next: NextFunction) => {
    try {
-      const [rows] = await pool.execute('SELECT * FROM students')
+      const [rows] = await pool.execute('SELECT id, name, last_name, dni, record_number, date_inscription, payment_plan_id, need_to_pay, registration_process_id, sede_id, salon_id, turn_id FROM students')
       res.json({
          success: true,
          data: rows
@@ -98,5 +98,38 @@ export const deleteStudent = async (req: Request, res: Response, next: NextFunct
 
    } catch (error) {
       next(error)
+   }
+}
+
+export const downloadPdf = async (req: Request, res: Response, next: NextFunction) => {
+   try {
+      const studentId = req.params.id;
+
+      const [rows] = await pool.execute('SELECT pdf_file, dni FROM students WHERE dni = ?', [studentId]);
+
+      if (!Array.isArray(rows) || rows.length === 0) {
+         return res.status(404).json({
+            success: false,
+            message: 'PDF no encontrado para el estudiante especificado.',
+         });
+      }
+
+      const student = rows[0] as { pdf_file: Buffer, dni: string };
+
+      if (!student.pdf_file) {
+         return res.status(404).json({
+            success: false,
+            message: 'El estudiante no tiene un PDF asociado.',
+         });
+      }
+
+      return res.json({
+         success: true,
+         data: rows
+      })
+
+   } catch (error) {
+      console.error('Error al descargar el PDF:', error);
+      next(error);
    }
 }

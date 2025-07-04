@@ -32,8 +32,7 @@ const CreateUserForm = () => {
       e.preventDefault()
 
       try {
-         const response = await addUser(formData, isAdministrator, token || '')
-         console.log('Usuario creado exitosamente:', response)
+         await addUser(formData, isAdministrator, token || '')
          setFormData({
             name: '',
             dni: '',

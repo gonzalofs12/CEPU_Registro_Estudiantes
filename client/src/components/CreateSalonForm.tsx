@@ -25,6 +25,7 @@ const CreateSalonForm = () => {
 
    const [formData, setFormData] = useState({
       name: '',
+      code: '',
       capacity: 0,
       sede_id: 0,
       turn_id: 0,
@@ -58,6 +59,7 @@ const CreateSalonForm = () => {
          await addSalon(formData, isAdministrator, token || '')
          setFormData({
             name: '',
+            code: '',
             capacity: 0,
             sede_id: 0,
             turn_id: 0,
@@ -79,6 +81,17 @@ const CreateSalonForm = () => {
                type="text"
                id="name"
                value={formData.name}
+               onChange={handleChange}
+               required
+               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+         </div>
+         <div className="mb-4">
+            <label htmlFor="code" className="block text-gray-700 text-sm font-bold mb-2">Código:</label>
+            <input
+               type="text"
+               id="code"
+               value={formData.code}
                onChange={handleChange}
                required
                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

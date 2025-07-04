@@ -13,11 +13,11 @@ export const createSalon = async (req: Request, res: Response, next: NextFunctio
          })
       }
 
-      const { name, capacity, sede_id, turn_id, registration_process_id } = transformObjectToUpperCase(req.body.salonData)
+      const { name, code, capacity, sede_id, turn_id, registration_process_id } = transformObjectToUpperCase(req.body.salonData)
 
       const response = await pool.execute(
-         'INSERT INTO salons (name, capacity, sede_id, turn_id, registration_process_id) VALUES (?, ?, ?, ?, ?)',
-         [name, capacity, sede_id, turn_id, registration_process_id]
+         'INSERT INTO salons (name, code, capacity, sede_id, turn_id, registration_process_id) VALUES (?, ?, ?, ?, ?, ?)',
+         [name, code, capacity, sede_id, turn_id, registration_process_id]
       )
 
       res.json({
@@ -26,6 +26,7 @@ export const createSalon = async (req: Request, res: Response, next: NextFunctio
          data: {
             id: (response as any)[0].insertId,
             name,
+            code,
             capacity,
             sede_id,
             turn_id,
@@ -39,7 +40,7 @@ export const createSalon = async (req: Request, res: Response, next: NextFunctio
 
 export const listSalons = async (req: Request, res: Response, next: NextFunction) => {
    try {
-      const [rows] = await pool.execute('SELECT id, name, capacity, sede_id, turn_id, registration_process_id FROM salons')
+      const [rows] = await pool.execute('SELECT id, name, code, capacity, sede_id, turn_id, registration_process_id FROM salons')
       res.json({
          success: true,
          data: rows
