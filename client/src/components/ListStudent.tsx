@@ -10,7 +10,7 @@ import { useProcessStore } from "../store/useProcessStore"
 import { MdNavigateBefore, MdNavigateNext, MdDeleteForever, MdEdit, MdDownload } from "react-icons/md"
 
 const ListStudent = () => {
-   const { students, refreshStudents, removeStudent, success, message, loading } = useStudentStore()
+   const { students, refreshStudents, removeStudent, success, message, loading, downloadPDF } = useStudentStore()
    const { user } = useUserData()
    const { token } = useGetToken()
    const [displayMessage, setDisplayMessage] = useState("")
@@ -91,25 +91,29 @@ const ListStudent = () => {
    const indexOfFirstItem = indexOfLastItem - itemsPerPage
    const currentStudents = filteredStudents.slice(indexOfFirstItem, indexOfLastItem)
 
-   const handleDownloadPdf = (studentId: number) => {
-      console.log(students)
-      const student = students.find(s => s.id === studentId)
-      console.log(student?.pdf_file)
-      if (student && student.pdf_file) {
-         const byteArray = new Uint8Array(student.pdf_file.data)
+   const handleDownloadPDF = async (studentId: number, token: string | null) => {
+      const isAdministrator = user?.role_id === 1
+      if (!token) {
+         setDisplayMessage("No se encontró el token de autenticación.")
+         setIsSuccess(false)
+         return
+      }
 
+      const response = await downloadPDF(studentId, isAdministrator, token)
+      if (response) {
+         const byteArray = new Uint8Array(response.pdf_file.data)
          const blob = new Blob([byteArray], { type: 'application/pdf' })
          const url = URL.createObjectURL(blob)
          const link = document.createElement('a')
          link.href = url
-         link.setAttribute('download', `inscripcion_${student.dni}.pdf`)
+         link.setAttribute('download', `inscripcion_${response.dni}.pdf`)
          document.body.appendChild(link)
          link.click()
          document.body.removeChild(link)
          URL.revokeObjectURL(url)
+         return
       } else {
          setDisplayMessage("PDF no disponible para este estudiante.")
-         setIsSuccess(false)
       }
    }
 
@@ -197,7 +201,7 @@ const ListStudent = () => {
                >
                   <option value="">Todos los salones</option>
                   {salons.map(salon => (
-                     <option key={salon.id} value={salon.id}>{salon.name}</option>
+                     <option key={salon.id} value={salon.id}>{salon.code}</option>
                   ))}
                </select>
                <input
@@ -249,7 +253,7 @@ const ListStudent = () => {
                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-1 rounded text-xs">
                               <MdEdit className="w-5 h-5" />
                            </button>
-                           <button onClick={() => handleDownloadPdf(student.id)} className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-1 rounded text-xs m-1">
+                           <button onClick={() => handleDownloadPDF(student.dni, token)} className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-1 rounded text-xs m-1">
                               <MdDownload className="w-5 h-5" />
                            </button>
                         </td>

@@ -57,6 +57,7 @@ const ListSalons = () => {
             <table className="min-w-full bg-white border border-gray-200">
                <thead>
                   <tr>
+                     <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Código</th>
                      <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nombre</th>
                      <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Capacidad</th>
                      <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Sede</th>
@@ -68,6 +69,7 @@ const ListSalons = () => {
                <tbody id="salon-list">
                   {salons.map(salon => (
                      <tr key={salon.id} className="hover:bg-gray-100">
+                        <td className="py-2 px-4 border-b border-gray-200">{salon.code}</td>
                         <td className="py-2 px-4 border-b border-gray-200">{salon.name}</td>
                         <td className="py-2 px-4 border-b border-gray-200">{salon.capacity}</td>
                         <td className="py-2 px-4 border-b border-gray-200">{sedes.find(sede => sede.id === salon.sede_id)?.code || salon.sede_id}</td>

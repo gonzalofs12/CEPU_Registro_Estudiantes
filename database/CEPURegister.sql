@@ -35,6 +35,7 @@ CREATE TABLE turns (
 -- Tabla de salones
 CREATE TABLE salons (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  code VARCHAR(50) NOT NULL UNIQUE,
   name VARCHAR(100) NOT NULL,
   capacity INT NOT NULL,
   sede_id INT NOT NULL,

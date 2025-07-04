@@ -40,7 +40,8 @@ const CreateStudentForm = () => {
       need_to_pay: false,
       registration_process_id: Number(''),
       sede_id: Number(''),
-      turn_id: Number('')
+      turn_id: Number(''),
+      photo_base_64: ''
    })
    const [displayMessage, setDisplayMessage] = useState('')
    const [isSuccess, setIsSuccess] = useState(false)
@@ -60,6 +61,18 @@ const CreateStudentForm = () => {
       const { id, value } = e.target
       setFormData({ ...formData, [id]: value })
    }
+
+   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+         const reader = new FileReader();
+         reader.onloadend = () => {
+            const base64String = reader.result?.toString().split(',')[1] || '';
+            setFormData({ ...formData, photo_base_64: base64String });
+         };
+         reader.readAsDataURL(file);
+      }
+   };
 
    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
@@ -106,7 +119,8 @@ const CreateStudentForm = () => {
             need_to_pay: false,
             registration_process_id: Number(''),
             sede_id: Number(''),
-            turn_id: Number('')
+            turn_id: Number(''),
+            photo_base_64: ''
          })
       } catch (error) {
          console.error('Error al crear el estudiante.', error)
@@ -189,6 +203,16 @@ const CreateStudentForm = () => {
                      <option key={process.id} value={process.id}>{process.name}</option>
                   ))}
                </select>
+            </div>
+            <div className="mb-4">
+               <label htmlFor="photo" className="block text-gray-700 text-sm font-bold mb-2">Foto:</label>
+               <input
+                  type="file"
+                  id="photo"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+               />
             </div>
             <div className="mb-4">
                <label htmlFor="sede_id" className="block text-gray-700 text-sm font-bold mb-2">Sede:</label>

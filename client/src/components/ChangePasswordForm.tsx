@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 import { changePassword } from "../services/authApi"
+import { useGetToken } from "../hooks/useGetToken"
+import { useUserData } from "../hooks/useUserData"
 
 const ChangePasswordForm = () => {
   const [currentPassword, setCurrentPassword] = useState('')
@@ -7,21 +9,21 @@ const ChangePasswordForm = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
 
+  const { token } = useGetToken()
+  const { user } = useUserData()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const token = localStorage.getItem('token')
-      const dni = localStorage.getItem('dni') || ''
+      const dni = user?.dni.toString() || ''
       if (!token) {
         setError('No se encontró el token de autenticación.')
         return
       }
-      const response = await changePassword(token, currentPassword, newPassword, dni)
+      await changePassword(token, currentPassword, newPassword, dni)
       setSuccess(true)
       setError('')
       setCurrentPassword('')
       setNewPassword('')
-      console.log('Contraseña cambiada exitosamente:', response)
     } catch (error) {
       setError('Error al cambiar la contraseña. Por favor, inténtalo de nuevo.')
       console.error('Error al cambiar la contraseña:', error)

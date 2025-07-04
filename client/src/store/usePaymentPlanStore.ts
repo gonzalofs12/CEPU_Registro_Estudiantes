@@ -36,7 +36,6 @@ export const usePaymentPlanStore = create<PaymentPlanState>((set) => ({
       set({ loading: true, error: '', success: false, message: '' })
       try {
          const response = await listPaymentPlans()
-         console.log(response)
          set({ paymentPlans: response.data, loading: false, success: true, message: 'Planes de pago cargados exitosamente.' })
       } catch (error) {
          console.error('Error fetching payment plans:', error)

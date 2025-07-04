@@ -5,6 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL
 interface Salon {
    id: number
    name: string
+   code: string
    capacity: number
    sede_id: number
    turn_id: number
